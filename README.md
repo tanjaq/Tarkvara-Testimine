@@ -1,6 +1,6 @@
 # Software Testing Course Materials
 
-Course materials repository for the **Software Testing Course** – a 9-lesson program covering software testing principles, methodologies, and best practices.
+Course materials repository for the **Software Testing Course**
 
 ## 🌐 Live Course
 
