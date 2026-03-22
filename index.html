@@ -7,27 +7,26 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#0f0c29;color:#e0e0e0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding:40px 20px;}
-h1{color:#4fc3f7;font-size:2em;text-align:center;margin-bottom:.3em;}
+h1{color:#4fc3f7;font-size:1.6em;text-align:center;margin-bottom:.3em;}
 .subtitle{text-align:center;color:#888;font-size:.80em;margin-bottom:3em;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;max-width:1100px;margin:0 auto;}
 .card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:24px;text-decoration:none;color:inherit;transition:all .2s;position:relative;overflow:hidden;}
 .card:hover{background:rgba(79,195,247,.1);border-color:#4fc3f7;transform:translateY(-2px);}
 .card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent,#4fc3f7);}
-.lesson-num{font-size:.65em;letter-spacing:3px;text-transform:uppercase;color:#888;margin-bottom:.4em;}
-.lesson-title{font-size:1.2em;font-weight:600;color:#fff;margin-bottom:.5em;}
-.topics{font-size:.80em;color:#aaa;line-height:1.6;}
-.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.70em;border:1px solid currentColor;margin:2px;}
-.hw-badge{position:absolute;top:16px;right:16px;font-size:.60em;background:rgba(79,195,247,.15);color:#4fc3f7;border:1px solid #4fc3f7;padding:2px 8px;border-radius:10px;}
+.lesson-num{font-size:.58em;letter-spacing:3px;text-transform:uppercase;color:#888;margin-bottom:.4em;}
+.lesson-title{font-size:.92em;font-weight:600;color:#fff;margin-bottom:.5em;}
+.topics{font-size:.62em;color:#aaa;line-height:1.6;}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.55em;border:1px solid currentColor;margin:2px;}
+.hw-badge{position:absolute;top:16px;right:16px;font-size:.53em;background:rgba(79,195,247,.15);color:#4fc3f7;border:1px solid #4fc3f7;padding:2px 8px;border-radius:10px;}
 .l1{--accent:#4fc3f7;} .l2{--accent:#81c784;} .l3{--accent:#ffb74d;}
 .l4{--accent:#e57373;} .l5{--accent:#ce93d8;} .l6{--accent:#4fc3f7;}
 .l7{--accent:#81c784;} .l8{--accent:#ffb74d;} .l9{--accent:#e57373;}
-.l10{--accent:#ce93d8;} .l11{--accent:#4fc3f7;} .l12{--accent:#81c784;}
-footer{text-align:center;color:#555;font-size:.75em;margin-top:3em;}
+footer{text-align:center;color:#555;font-size:.65em;margin-top:3em;}
 </style>
 </head>
 <body>
 <h1>Software Testing Course</h1>
-<p class="subtitle">12 Lessons · Hands-on Practice</p>
+<p class="subtitle">9 Lessons · 4 Manual + 5 Automation · Hands-on Practice · Real-world Skills</p>
 
 <div class="grid">
 
@@ -39,7 +38,7 @@ footer{text-align:center;color:#555;font-size:.75em;margin-top:3em;}
       <span class="tag" style="color:#4fc3f7">Quality</span>
       <span class="tag" style="color:#4fc3f7">Testing</span>
       <span class="tag" style="color:#4fc3f7">Terminology</span>
-      <span class="tag" style="color:#4fc3f7">Testing Principles</span>
+      <span class="tag" style="color:#4fc3f7">7 Principles</span>
     </div>
   </a>
 
@@ -57,125 +56,91 @@ footer{text-align:center;color:#555;font-size:.75em;margin-top:3em;}
   <a href="lesson-03.html" class="card l3">
     <div class="hw-badge">HW 3</div>
     <div class="lesson-num">Lesson 3</div>
-    <div class="lesson-title">Test Techniques: Static &amp; Dynamic</div>
+    <div class="lesson-title">Bug Reports &amp; Test Documentation</div>
     <div class="topics">
-      <span class="tag" style="color:#ffb74d">Static</span>
-      <span class="tag" style="color:#ffb74d">Black-box</span>
-      <span class="tag" style="color:#ffb74d">White-box</span>
-      <span class="tag" style="color:#ffb74d">BVA / EP</span>
+      <span class="tag" style="color:#ffb74d">Defects</span>
+      <span class="tag" style="color:#ffb74d">Bug Reports</span>
+      <span class="tag" style="color:#ffb74d">Test Cases</span>
+      <span class="tag" style="color:#ffb74d">Regression</span>
     </div>
   </a>
 
   <a href="lesson-04.html" class="card l4">
     <div class="hw-badge">HW 4</div>
-    <div class="lesson-num">Lesson 4</div>
-    <div class="lesson-title">What is a Bug Report?</div>
+    <div class="lesson-num">Lesson 4 · Last manual</div>
+    <div class="lesson-title">Test Techniques: Static &amp; Dynamic</div>
     <div class="topics">
-      <span class="tag" style="color:#e57373">Defects</span>
-      <span class="tag" style="color:#e57373">Lifecycle</span>
-      <span class="tag" style="color:#e57373">Severity</span>
-      <span class="tag" style="color:#e57373">Priority</span>
+      <span class="tag" style="color:#e57373">PR Review</span>
+      <span class="tag" style="color:#e57373">EP / BVA</span>
+      <span class="tag" style="color:#e57373">Decision Tables</span>
+      <span class="tag" style="color:#e57373">State Transition</span>
+      <span class="tag" style="color:#e57373">Coverage</span>
     </div>
   </a>
 
   <a href="lesson-05.html" class="card l5">
     <div class="hw-badge">HW 5</div>
-    <div class="lesson-num">Lesson 5</div>
-    <div class="lesson-title">Test Documentation</div>
+    <div class="lesson-num">Lesson 5 · Automation begins</div>
+    <div class="lesson-title">Refactor, Unit Testing &amp; Code Coverage</div>
     <div class="topics">
-      <span class="tag" style="color:#ce93d8">Test Plan</span>
-      <span class="tag" style="color:#ce93d8">Test Cases</span>
-      <span class="tag" style="color:#ce93d8">Traceability</span>
+      <span class="tag" style="color:#ce93d8">Clean Code</span>
+      <span class="tag" style="color:#ce93d8">AAA</span>
+      <span class="tag" style="color:#ce93d8">Coverage</span>
+      <span class="tag" style="color:#ce93d8">TDD</span>
+      <span class="tag" style="color:#ce93d8">Car Rental</span>
     </div>
   </a>
 
   <a href="lesson-06.html" class="card l6">
     <div class="hw-badge">HW 6</div>
     <div class="lesson-num">Lesson 6</div>
-    <div class="lesson-title">Unit Testing &amp; Code Coverage</div>
+    <div class="lesson-title">API Testing &amp; Mocking</div>
     <div class="topics">
-      <span class="tag" style="color:#4fc3f7">Refactoring</span>
-      <span class="tag" style="color:#4fc3f7">AAA</span>
-      <span class="tag" style="color:#4fc3f7">FIRST</span>
-      <span class="tag" style="color:#4fc3f7">Car Rental</span>
-      <span class="tag" style="color:#ce93d8;border-color:#ce93d8">✦ AI — Trust But Verify</span>
+      <span class="tag" style="color:#4fc3f7">REST</span>
+      <span class="tag" style="color:#4fc3f7">Supertest</span>
+      <span class="tag" style="color:#4fc3f7">Mocking</span>
+      <span class="tag" style="color:#4fc3f7">User Register</span>
     </div>
   </a>
 
   <a href="lesson-07.html" class="card l7">
     <div class="hw-badge">HW 7</div>
     <div class="lesson-num">Lesson 7</div>
-    <div class="lesson-title">API Testing &amp; Mocking</div>
+    <div class="lesson-title">API Testing with Postman</div>
     <div class="topics">
-      <span class="tag" style="color:#81c784">REST</span>
-      <span class="tag" style="color:#81c784">Supertest</span>
-      <span class="tag" style="color:#81c784">Mocking</span>
-      <span class="tag" style="color:#81c784">User Register</span>
+      <span class="tag" style="color:#81c784">Postman</span>
+      <span class="tag" style="color:#81c784">Collections</span>
+      <span class="tag" style="color:#81c784">Swagger</span>
+      <span class="tag" style="color:#81c784">PetStore</span>
     </div>
   </a>
 
   <a href="lesson-08.html" class="card l8">
     <div class="hw-badge">HW 8</div>
     <div class="lesson-num">Lesson 8</div>
-    <div class="lesson-title">API Testing with Postman</div>
+    <div class="lesson-title">E2E, Acceptance Testing &amp; UI Practices</div>
     <div class="topics">
-      <span class="tag" style="color:#ffb74d">Postman</span>
-      <span class="tag" style="color:#ffb74d">Collections</span>
-      <span class="tag" style="color:#ffb74d">Environments</span>
-      <span class="tag" style="color:#ffb74d">Newman</span>
+      <span class="tag" style="color:#ffb74d">E2E</span>
+      <span class="tag" style="color:#ffb74d">Playwright</span>
+      <span class="tag" style="color:#ffb74d">Acceptance</span>
+      <span class="tag" style="color:#ffb74d">UI Practices</span>
     </div>
   </a>
 
   <a href="lesson-09.html" class="card l9">
     <div class="hw-badge">HW 9</div>
     <div class="lesson-num">Lesson 9</div>
-    <div class="lesson-title">Test Automation at Scale</div>
+    <div class="lesson-title">Design Patterns: Page Object Pattern</div>
     <div class="topics">
-      <span class="tag" style="color:#e57373">Strategy</span>
-      <span class="tag" style="color:#e57373">Flaky Tests</span>
-      <span class="tag" style="color:#e57373">CI/CD</span>
-      <span class="tag" style="color:#e57373">Careers</span>
-    </div>
-  </a>
-
-  <a href="lesson-10.html" class="card l10">
-    <div class="hw-badge">HW 10</div>
-    <div class="lesson-num">Lesson 10</div>
-    <div class="lesson-title">E2E Testing &amp; Playwright</div>
-    <div class="topics">
-      <span class="tag" style="color:#ce93d8">E2E</span>
-      <span class="tag" style="color:#ce93d8">Playwright</span>
-      <span class="tag" style="color:#ce93d8">Selectors</span>
-      <span class="tag" style="color:#ce93d8">Auto-wait</span>
-    </div>
-  </a>
-
-  <a href="lesson-11.html" class="card l11">
-    <div class="hw-badge">HW 11</div>
-    <div class="lesson-num">Lesson 11</div>
-    <div class="lesson-title">Testing Kriso Webshop</div>
-    <div class="topics">
-      <span class="tag" style="color:#4fc3f7">Search</span>
-      <span class="tag" style="color:#4fc3f7">Navigation</span>
-      <span class="tag" style="color:#4fc3f7">Cart</span>
-      <span class="tag" style="color:#4fc3f7">Live Coding</span>
-    </div>
-  </a>
-
-  <a href="lesson-12.html" class="card l12">
-    <div class="hw-badge">HW 12</div>
-    <div class="lesson-num">Lesson 12</div>
-    <div class="lesson-title">Page Object Model &amp; CI/CD</div>
-    <div class="topics">
-      <span class="tag" style="color:#81c784">POM</span>
-      <span class="tag" style="color:#81c784">Fixtures</span>
-      <span class="tag" style="color:#81c784">GitHub Actions</span>
-      <span class="tag" style="color:#81c784">Cross-browser</span>
+      <span class="tag" style="color:#e57373">POM</span>
+      <span class="tag" style="color:#e57373">BasePage</span>
+      <span class="tag" style="color:#e57373">Components</span>
+      <span class="tag" style="color:#e57373">Refactor</span>
     </div>
   </a>
 
 </div>
 
-<footer style="margin-top:3em">Tarkvara Testimine · 12 Lessons</footer>
+<footer style="margin-top:3em">Software Testing Course · Open any lesson to begin · Use → to navigate between slides in each lesson</footer>
 </body>
 </html>
