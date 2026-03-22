@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 3 – Bug Reports &amp; Test Documentation</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/black.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css">
+<style>
+:root{--blue:#4fc3f7;--green:#81c784;--orange:#ffb74d;--red:#e57373;--purple:#ce93d8;}
+.reveal{font-family:'Segoe UI',system-ui,sans-serif;font-size:34px;}
+.reveal h2{color:var(--blue);font-size:0.95em;}
+.reveal h3{color:var(--green);margin-bottom:.3em;font-size:0.85em;}
+.reveal p{font-size:.60em;line-height:1.5;}.reveal li{font-size:.75em;line-height:1.5;}
+.reveal pre{font-size:.44em;width:100%;box-shadow:none;}
+.reveal ul{text-align:left;margin-left:1em;}
+.reveal blockquote{width:100%;box-sizing:border-box;border-left:4px solid var(--blue);padding:.4em 1em;font-style:italic;color:#ccc;background:rgba(79,195,247,.06);margin:.5em 0;font-size:.60em;}
+.lbl{font-size:.38em;letter-spacing:3px;text-transform:uppercase;color:#888;display:block;margin-bottom:.2em;}
+.divider{width:40px;height:3px;background:var(--blue);margin:.3em auto .6em;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:left;}
+.card{background:rgba(255,255,255,.05);border-left:4px solid var(--blue);padding:8px 12px;border-radius:0 5px 5px 0;font-size:.65em;line-height:1.5;}
+.card.g{border-left-color:var(--green);}
+.card.o{border-left-color:var(--orange);}
+.card.r{border-left-color:var(--red);}
+.card.p{border-left-color:var(--purple);}
+.card strong{display:block;margin-bottom:.15em;}
+.plan{background:rgba(255,255,255,.04);border:1px solid rgba(79,195,247,.3);border-radius:10px;padding:16px 20px;text-align:left;max-width:820px;margin:0 auto;}
+.plan-title{color:var(--blue);font-size:.8em;font-weight:700;margin-bottom:.6em;border-bottom:1px solid rgba(79,195,247,.2);padding-bottom:.4em;}
+.plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.plan-topics p{font-size:.68em;margin:.2em 0;color:#ddd;}
+.plan-topics p span{color:var(--blue);font-weight:600;}
+.plan-engage{background:rgba(129,199,132,.08);border:1px solid var(--green);border-radius:6px;padding:8px 12px;font-size:.65em;margin-bottom:8px;}
+.plan-engage strong{color:var(--green);}
+.plan-hw{background:rgba(79,195,247,.08);border:1px solid var(--blue);border-radius:6px;padding:8px 12px;font-size:.65em;}
+.plan-hw strong{color:var(--blue);}
+.teams{background:rgba(100,100,255,.08);border:2px solid #6264a7;border-radius:10px;padding:14px 18px;text-align:left;}
+.teams h3{color:#9b9fe3!important;margin-top:0;}
+.teams .tip{font-size:.62em;color:#9b9fe3;margin-top:.4em;}
+.hw{background:rgba(79,195,247,.08);border:2px solid var(--blue);border-radius:10px;padding:14px 18px;text-align:left;}
+.hw h3{color:var(--blue)!important;margin-top:0;}
+.hw a{color:var(--orange);}
+.report-field{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:8px 12px;font-size:.62em;line-height:1.5;margin-bottom:6px;text-align:left;}
+.report-field .fname{font-weight:700;color:var(--blue);margin-bottom:.2em;}
+.lifecycle{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:.6em 0;}
+.lc-node{background:rgba(255,255,255,.06);border:1px solid rgba(79,195,247,.4);border-radius:20px;padding:4px 12px;font-size:.6em;}
+.lc-arr{color:var(--orange);}
+.tc-table{width:100%;border-collapse:collapse;font-size:.58em;}
+.tc-table th{background:rgba(79,195,247,.15);color:var(--blue);padding:5px 8px;text-align:left;}
+.tc-table td{padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top;}
+.tc-table tr:nth-child(even) td{background:rgba(255,255,255,.03);}
+.key-concept{background:rgba(206,147,216,.08);border:2px solid var(--purple);border-radius:10px;padding:12px 16px;text-align:left;margin:.4em 0;}
+.key-concept .kc-label{font-size:.48em;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:.3em;font-weight:700;}
+.key-concept p{font-size:.65em;margin:0;}
+.self-check{background:rgba(129,199,132,.06);border:2px solid var(--green);border-radius:10px;padding:14px 18px;text-align:left;}
+.self-check h3{color:var(--green)!important;margin-top:0;}
+.objectives{background:rgba(255,255,255,.04);border:1px solid rgba(79,195,247,.3);border-radius:10px;padding:14px 20px;max-width:800px;margin:0 auto;text-align:left;}
+.objectives p{font-size:.68em;margin:.2em 0;color:#ddd;}
+.objectives p::before{content:"✓ ";color:var(--green);}
+.nav{position:fixed;top:12px;right:12px;z-index:999;font-size:.55em;display:flex;gap:8px;}
+.nav a{color:#555;text-decoration:none;padding:3px 8px;border:1px solid #333;border-radius:5px;}
+.nav a:hover{color:#fff;border-color:#fff;}
+</style>
+</head>
+<body>
+<div class="nav"><a href="lesson-02.html">← L2</a><a href="index.html">↩ All</a><a href="lesson-04.html">L4 →</a></div>
+<div class="reveal"><div class="slides">
+
+<!-- TITLE -->
+<section data-background-gradient="linear-gradient(135deg,#0f0c29,#302b63,#24243e)">
+  <span class="lbl">Lesson 3 of 9</span>
+  <h2>Bug Reports &amp; Test Documentation</h2>
+  <div class="divider"></div>
+  <p style="font-size:.62em">Test Cases · Regression · What is a defect · Bug report anatomy · Severity &amp; Priority</p>
+  <p style="font-size:.5em;color:#555;margin-top:.8em">→ next slide &nbsp;|&nbsp; ESC overview</p>
+</section>
+
+<!-- LESSON PLAN -->
+<section>
+  <span class="lbl">Lesson Plan</span>
+  <div class="plan">
+    <div class="plan-title">Lesson 3: Bug Reports &amp; Test Documentation <br> Focus: Finding, reporting, and documenting test work professionally</div>
+    <div class="plan-grid">
+      <div class="plan-topics">
+        <p><span>1.</span> From User Story to Test Case — the chain from requirement to verification</p>
+        <p><span>2.</span> Test Case Anatomy &amp; Best Practices — components, writing good cases</p>
+        <p><span>3.</span> Confirmation &amp; Regression Testing — re-testing and regression</p>
+        <p><span>4.</span> What is a defect — error, bug, failure chain</p>
+        <p><span>5.</span> Bug Reports — anatomy, fields, severity &amp; priority</p>
+        <p><span>6.</span> Bug Lifecycle &amp; RCA — from discovery to closure</p>
+      </div>
+      <div>
+        <div class="plan-hw"><strong>Homework:</strong> Find a real bug on any website. Write a full bug report and submit as a GitHub Issue to the Bug-Reporting repo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FROM USER STORY TO TEST CASE -->
+<section>
+  <span class="lbl">From Requirement to Test</span>
+  <h3>User Story → Requirement → Test Case</h3>
+  <p>Test cases are derived directly from requirements. <br> This chain makes them traceable — you can prove which tests cover which requirements.</p>
+  <div class="card p" style="margin-bottom:10px">
+    <strong>User Story</strong>
+    "As an online shopper, I want to filter search results by price range, so that I can find products within my budget more easily."
+  </div>
+  <div class="card o" style="margin-bottom:10px">
+    <strong>Requirement (derived from user story)</strong>
+    The search results page shall support filtering by a minimum and maximum price, showing only products within that range.
+  </div>
+  <div class="card g">
+    <strong>Test Case (derived from requirement)</strong>
+    Verify that entering min $50 and max $200 in the price filter shows only products priced $50–$200.
+  </div>
+  <div class="key-concept" style="margin-top:.5em">
+    <div class="kc-label">Key Concept</div>
+    <p>One user story → many requirements. One requirement → many test cases (happy path, negative cases, edge cases). When a test case fails, you write a bug report — which we cover later in this lesson.</p>
+  </div>
+</section>
+
+<!-- TEST CASE ANATOMY -->
+<section>
+  <span class="lbl">Test Case Anatomy</span>
+  <h3>Anatomy of a Test Case</h3>
+  <p>A test case is a <strong>precise, repeatable script</strong> that anyone on the team can execute and get the same result.</p>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:6px"><strong style="color:var(--blue)">ID / Title</strong>Unique identifier (e.g. TC-001) + a short name that describes what is being tested</div>
+      <div class="card g" style="margin-bottom:6px"><strong>Preconditions</strong>What must already be true before starting — logged in? specific data in the system?</div>
+      <div class="card o" style="margin-bottom:6px"><strong>Test Steps</strong>Numbered actions, each doing exactly one thing. Someone who has never used the app should be able to follow them.</div>
+      <div class="card p"><strong>Test Data</strong>Exact values to use — which user account, which input, which environment</div>
+    </div>
+    <div>
+      <div class="card g" style="margin-bottom:6px"><strong>Expected Results</strong>What the system should do or show at each step (or at the end). Reference the requirement.</div>
+      <div class="card r" style="margin-bottom:6px"><strong>Actual Results</strong>Filled in during execution — what actually happened. If different from expected: log a bug.</div>
+      <div class="card o" style="margin-bottom:6px"><strong>Postconditions</strong>What state should the system be in after the test is done</div>
+      <div class="card"><strong>Status</strong>Pass / Fail / Blocked / Not Executed — updated each test run</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="lbl">Test Case Example</span>
+  <h3>Test Case in Practice</h3>
+  <p style="font-size:.6em;color:var(--blue)"><strong>TC-014 · Price filter shows results within range</strong> &nbsp;·&nbsp; <span style="color:#aaa">Preconditions: logged in as registered user, on /search</span></p>
+  <table class="tc-table">
+    <tr><th>#</th><th>Test Step</th><th>Expected Result</th><th>Actual Result</th></tr>
+    <tr>
+      <td>1</td>
+      <td>Locate the "Price Range" filter on the page</td>
+      <td>Filter is visible with min and max input fields</td>
+      <td style="color:var(--green)">Pass</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Enter 50 in the min field and 200 in the max field</td>
+      <td>Both fields accept the values</td>
+      <td style="color:var(--green)">Pass</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Click "Apply"</td>
+      <td>Results list reloads. All shown products are priced $50–$200.</td>
+      <td style="color:var(--red)">FAIL — products under $50 shown. → Bug PRF-115</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Click "Clear" to reset the filter</td>
+      <td>All products are shown again</td>
+      <td style="color:#888">Not executed (step 3 failed)</td>
+    </tr>
+  </table>
+  <p style="font-size:.58em;color:#888;margin-top:.4em">When step 3 fails, you write bug report PRF-115. The connection between test cases and bug reports is exactly how professional QA tracking works — we build that bug report later in this lesson.</p>
+</section>
+
+<section>
+  <span class="lbl">Best Practices</span>
+  <h3>Writing Test Cases That Actually Help</h3>
+  <div class="g2">
+    <div>
+      <div class="card g" style="margin-bottom:6px"><strong>✅ One test case = one scenario</strong>Don't test login AND price filter in the same case. When it fails, you won't know which feature broke.</div>
+      <div class="card" style="margin-bottom:6px"><strong>✅ Include negative tests</strong>What should NOT work is as important as what should. Always test invalid input, missing fields, unauthorized access.</div>
+      <div class="card o"><strong>✅ Be specific about expected results</strong>"Works correctly" is not a valid expected result. Write exactly what should appear, what value, what message.</div>
+    </div>
+    <div>
+      <div class="card p" style="margin-bottom:6px"><strong>✅ Name tests descriptively</strong>"TC-014 · Price filter shows results within range" tells you what passed or failed without opening it.</div>
+      <div class="card r" style="margin-bottom:6px"><strong>❌ Don't chain dependent tests</strong>If test 3 requires the output of test 2, one failure cascades. Keep tests independent.</div>
+      <div class="card"><strong>✅ Include edge cases</strong>What happens at boundaries? Empty input? Maximum length? Special characters? These are where bugs hide.</div>
+    </div>
+  </div>
+</section>
+
+<!-- REGRESSION TESTING -->
+<section>
+  <span class="lbl">Confirmation &amp; Regression</span>
+  <h3>Re-testing &amp; Regression Testing</h3>
+  <div class="g2">
+    <div>
+      <div class="card o" style="margin-bottom:8px">
+        <strong>Confirmation (Re-testing)</strong>
+        A bug was fixed. Run the exact same test case again — same steps, same data, same environment.<br><br>
+        Only mark as "fixed" when it passes identically. Testing only the fix is not enough — nearby code often breaks too.
+      </div>
+    </div>
+    <div>
+      <div class="card g">
+        <strong>Regression Testing</strong>
+        Every code change can break something that was working. After any change, re-run tests for related features.<br><br>
+        <ul style="font-size:.95em">
+          <li><strong>Full regression</strong> — run everything, very thorough, slow</li>
+          <li><strong>Selective</strong> — run tests related to changed areas, faster</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="key-concept" style="margin-top:.5em">
+    <div class="kc-label">Why This Matters</div>
+    <p>Running the same 200 tests manually after every code change is tedious and error-prone. This is the main reason testing gets automated — not because it's impossible manually, but because humans can't do it reliably at scale. </p>
+  </div>
+</section>
+
+<!-- WHAT IS A BUG -->
+<section>
+  <span class="lbl">Defects</span>
+  <h3>What Is a Bug?</h3>
+  <p>A <strong>defect / bug / error / issue</strong> is anything where the <strong>actual result</strong> differs from the <strong>expected result</strong> defined by requirements. It doesn't have to crash the app.</p>
+  <div class="g3" style="margin-top:.7em">
+    <div class="card r">
+      <strong>Error</strong>
+      A human mistake — wrong assumption, misread requirement, typo in logic.<br><br>
+      <em style="color:#aaa">e.g. Developer misread "age ≥ 18" as "age > 18"</em>
+    </div>
+    <div class="card o">
+      <strong>Defect / Bug</strong>
+      The flaw in code or documentation that results from the error.<br><br>
+      <em style="color:#aaa">e.g. The comparison in the code is written as &gt; instead of ≥</em>
+    </div>
+    <div class="card">
+      <strong>Failure</strong>
+      The observable wrong behaviour when the defect is actually triggered.<br><br>
+      <em style="color:#aaa">e.g. A 18-year-old can't register even though they should be able to</em>
+    </div>
+  </div>
+  <div class="key-concept" style="margin-top:.6em">
+    <div class="kc-label">Key Concept</div>
+    <p>Not every error causes a failure. A bug in code that never runs is a defect — but you'll only see a failure when that code path is triggered. That's why testing edge cases matters.</p>
+  </div>
+</section>
+
+<section>
+  <span class="lbl">Cost of Bugs</span>
+  <h3>Why Production Bugs Are Expensive</h3>
+  <p>The later a bug is found, the more it costs to fix. Each stage multiplies the effort required.</p>
+  <div class="g2">
+    <div class="card" style="text-align:center;font-size:.62em;line-height:2.2">
+      <div style="color:var(--green)">Requirements phase: <strong>1×</strong></div>
+      <div style="color:var(--blue)">Design phase: <strong>3×</strong></div>
+      <div style="color:var(--orange)">Development: <strong>10×</strong></div>
+      <div style="color:var(--orange)">QA / Testing: <strong>25×</strong></div>
+      <div style="color:var(--red)">Production: <strong>100×</strong></div>
+    </div>
+    <div>
+      <div class="card r">
+        <strong>Why bugs escape to production:</strong>
+        <ul>
+          <li>Can't be reproduced reliably</li>
+          <li>Found too late in the cycle</li>
+          <li>Team decided not to fix it</li>
+          <li>Fix introduced a new bug</li>
+          <li>"It's not a bug, it's a feature" 😄</li>
+        </ul>
+      </div>
+      <div class="key-concept" style="margin-top:8px">
+        <div class="kc-label">Key Concept</div>
+        <p>This is why testers must be involved early in the process — not just at the end. <br> A tester reviewing requirements can prevent 100× expensive production incidents.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUG REPORT ANATOMY -->
+<section>
+  <span class="lbl">Bug Report</span>
+  <h3>Who Reads a Bug Report — and Why?</h3>
+  <p>A good bug report serves multiple audiences at once. Understanding who reads it helps you write the right level of detail.</p>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:8px"><strong style="color:var(--blue)">Developer</strong>Needs exact steps to reproduce. Needs environment details to know where to look. The more precise, the faster the fix.</div>
+      <div class="card g"><strong>Product Manager</strong>Needs impact assessment — how many users affected, which features, how visible is it to customers.</div>
+    </div>
+    <div>
+      <div class="card o"><strong>Process Manager</strong>Needs root cause info — what process failure allowed this bug to reach this stage?</div>
+      <div class="card p" style="margin-top:8px"><strong>The Whole Team</strong>Needs clarity and professional tone. Bugs are system failures, not personal ones. Never write "you broke X".</div>
+    </div>
+  </div>
+  <blockquote style="margin-top:.5em">Always check for duplicates before filing. A developer receiving the same bug 5 times from 5 reporters wastes everyone's time.</blockquote>
+</section>
+
+<section>
+  <span class="lbl">Report Fields (1/2)</span>
+  <h3>Required Fields — Part 1</h3>
+  <div class="report-field">
+    <div class="fname">📋 Summary / Title</div>
+    Short, descriptive, includes <em>which feature</em> and <em>what goes wrong</em>. Written so it's useful in a bug list without opening the full report.<br>
+    <em style="color:var(--green)">✅ "[Search] Price filter shows products below $50 minimum"</em><br>
+    <em style="color:var(--red)">❌ "Filter broken"</em> — unactionable, unsearchable
+  </div>
+  <div class="report-field">
+    <div class="fname">🖥️ Environment</div>
+    OS · Browser + version · App version · Environment (dev / QA / staging / production) · Device type<br>
+    <em style="color:#aaa">A bug that only appears in Safari on iOS needs a very different fix than one in Chrome on Windows.</em>
+  </div>
+  <div class="report-field">
+    <div class="fname">⚠️ Severity — How badly does this break the system?</div>
+    <strong style="color:var(--red)">Critical</strong> — crash, data loss, system unusable &nbsp;·&nbsp;
+    <strong style="color:var(--orange)">Major</strong> — key feature broken, no workaround &nbsp;·&nbsp;
+    <strong style="color:var(--blue)">Minor</strong> — bug with a workaround &nbsp;·&nbsp;
+    <strong style="color:#888">Trivial</strong> — cosmetic only
+  </div>
+  <div class="report-field">
+    <div class="fname">🔴 Priority — How urgently must this be fixed?</div>
+    <strong>P0</strong>: Fix now, blocks all usage &nbsp;·&nbsp; <strong>P1</strong>: Fix this sprint, key flow affected &nbsp;·&nbsp; <strong>P2</strong>: Fix soon, app still usable
+  </div>
+</section>
+
+<section>
+  <span class="lbl">Report Fields (2/2)</span>
+  <h3>Required Fields — Part 2</h3>
+  <div class="report-field">
+    <div class="fname">👣 Steps to Reproduce</div>
+    Numbered. Exact. Starting from a known state (e.g. "logged in as regular user"). Every step should be reproducible by someone who has never seen this before.<br>
+    <em style="color:#aaa">Vague: "Go to search and filter" <br> Exact: "1. Open /search 2. Set min price $50, max $200 3. Click Apply 4. Scroll results"</em>
+  </div>
+  <div class="report-field">
+    <div class="fname">✅ Expected Result</div>
+    What the system <em>should</em> do at the last step — ideally referencing the requirement or design spec that defines this behaviour.
+  </div>
+  <div class="report-field">
+    <div class="fname">❌ Actual Result</div>
+    What the system <em>actually</em> does. Be specific — not "it doesn't work" but "Products priced at $32 and $41 appear in the results list."
+  </div>
+  <div class="report-field">
+    <div class="fname">📸 Visuals / Logs</div>
+    Screenshots, screen recordings. Browser console errors. Network tab response. Server logs with timestamps. The more evidence, the faster the fix.
+  </div>
+</section>
+
+<section>
+  <span class="lbl">Full Example</span>
+  <h3>Bug Report — Complete Example</h3>
+  <div class="card r" style="margin-bottom:8px;font-size:.62em">
+    <strong>PRF-115 · [Search] Price filter shows products below the minimum price</strong><br>
+    Env: Chrome 124 · macOS 14.4 · QA env v2.3.1 &nbsp;·&nbsp; Severity: <span style="color:var(--orange)">Major</span> · Priority: <span style="color:var(--red)">P1</span>
+  </div>
+  <div class="g2">
+    <div class="card o" style="font-size:.6em">
+      <strong>Steps to reproduce:</strong>
+      <ol>
+        <li>Log in as a registered user</li>
+        <li>Navigate to the product search page</li>
+        <li>Locate the "Price Range" filter</li>
+        <li>Enter min $50, max $200</li>
+        <li>Click "Apply"</li>
+        <li>Scroll through the results list</li>
+      </ol>
+    </div>
+    <div>
+      <div class="card g" style="font-size:.6em;margin-bottom:8px">
+        <strong>Expected:</strong>
+        All products in results are priced between $50 and $200 (inclusive).
+      </div>
+      <div class="card r" style="font-size:.6em">
+        <strong>Actual:</strong>
+        Products priced at $12, $32, and $41 appear in results. The minimum price filter is not being applied.
+      </div>
+    </div>
+  </div>
+  <div class="key-concept" style="margin-top:.5em">
+    <div class="kc-label">Notice</div>
+    <p>This is exactly the bug that TC-014 step 3 caught. The actual result names specific prices — not "filter doesn't work." The developer can immediately reproduce the exact failure case.</p>
+  </div>
+</section>
+
+<section>
+  <span class="lbl">Severity vs Priority</span>
+  <h3>Severity ≠ Priority</h3>
+  <p style="font-size:.62em">Severity is technical — how broken is it? <br> Priority is business — how urgently do we fix it?</p>
+  <div class="g2" style="margin-top:.5em">
+    <div class="card r" style="margin-bottom:8px">
+      <strong>High Severity + High Priority</strong>
+      Payment crashes on checkout for all users. Fix immediately — every minute costs money.
+    </div>
+    <div class="card o" style="margin-bottom:8px">
+      <strong>Low Severity + High Priority</strong>
+      CEO's name is misspelled on the homepage. Not breaking anything — but fix it before the morning press release.
+    </div>
+    <div class="card g" style="margin-bottom:8px">
+      <strong>High Severity + Low Priority</strong>
+      Crash when exporting a legacy report format used by 2 internal users once a year. Real crash — but low business impact.
+    </div>
+    <div class="card" style="border-left-color:#555">
+      <strong style="color:#888">Low Severity + Low Priority</strong>
+      Minor pixel misalignment in the footer on Firefox only. Nice to fix eventually.
+    </div>
+  </div>
+  <div class="key-concept" style="margin-top:.5em">
+    <div class="kc-label">Key Concept</div>
+    <p>QA sets severity based on technical impact. Product/business sets priority based on business context.</p>
+  </div>
+</section>
+
+<!-- BUG LIFECYCLE AND RCA -->
+<section>
+  <span class="lbl">Bug Lifecycle</span>
+  <h3>Bug Lifecycle — From Discovery to Closure</h3>
+  <p>Every bug follows a defined path. <br> Understanding the lifecycle helps you know what action to take at each step.</p>
+  <div class="lifecycle">
+    <span class="lc-node" style="border-color:var(--blue)">New</span>
+    <span class="lc-arr">→</span>
+    <span class="lc-node" style="border-color:var(--orange)">Assigned</span>
+    <span class="lc-arr">→</span>
+    <span class="lc-node" style="border-color:var(--orange)">In Progress</span>
+    <span class="lc-arr">→</span>
+    <span class="lc-node" style="border-color:var(--green)">Fixed</span>
+    <span class="lc-arr">→</span>
+    <span class="lc-node" style="border-color:var(--purple)">Re-test</span>
+    <span class="lc-arr">→</span>
+    <span class="lc-node" style="border-color:var(--green)">Closed ✓</span>
+  </div>
+  <div class="g2" style="margin-top:.4em">
+    <div class="card" style="font-size:.6em">
+      <strong>Alternative paths (all valid):</strong>
+      <ul>
+        <li><strong>Re-opened</strong> — fix didn't work, or caused a regression</li>
+        <li><strong>Rejected / Won't Fix</strong> — not a bug, or intentional behaviour</li>
+        <li><strong>Deferred</strong> — real bug, fix scheduled for a later sprint</li>
+        <li><strong>Duplicate</strong> — already reported, link to original</li>
+        <li><strong>Cannot Reproduce</strong> — needs more info from reporter</li>
+      </ul>
+    </div>
+    <div class="card g" style="font-size:.6em">
+      <strong>Bug management tools:</strong>
+      <ul>
+        <li><strong>Jira</strong> — industry standard, full lifecycle tracking</li>
+        <li><strong>GitHub Issues</strong> — used in this course</li>
+        <li><strong>Linear</strong> — modern, fast, developer-friendly</li>
+        <li><strong>YouTrack</strong> — JetBrains tool, great for QA workflows</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="lbl">Root Cause Analysis</span>
+  <h3>RCA — Root Cause Analysis</h3>
+  <p>Finding <strong>why</strong> a bug occurred — not just fixing it and moving on. <br> Good RCA prevents the same class of bug from appearing again.</p>
+  <div class="g3" style="margin-top:.6em">
+    <div class="card r">
+      <strong>Human Cause</strong>
+      Developer misunderstood the requirement. Wrong assumption about an edge case. Typo in logic.<br><br>
+      <em style="color:#aaa">Fix: better requirements, more review</em>
+    </div>
+    <div class="card o">
+      <strong>Organizational Cause</strong>
+      No peer review process. Unclear specification. No testing environment. Unrealistic deadline.<br><br>
+      <em style="color:#aaa">Fix: improve process, not blame</em>
+    </div>
+    <div class="card">
+      <strong>Technical / Physical Cause</strong>
+      Infrastructure issue — server failure, network timeout, memory limit, third-party service.<br><br>
+      <em style="color:#aaa">Fix: monitoring, redundancy</em>
+    </div>
+  </div>
+  <blockquote style="margin-top:.7em">The goal of RCA is to improve the <em>system</em>, not assign blame. The same bug happening twice means the process didn't learn.</blockquote>
+</section>
+
+<!-- SELF-CHECK -->
+<section>
+  <span class="lbl">Self-Check</span>
+  <div class="self-check">
+    <h3>✅ Can You Answer These?</h3>
+    <p>Test your understanding before moving on. If any of these feel shaky, go back and re-read the relevant slide.</p>
+    <ol style="font-size:.65em;line-height:2">
+      <li>What is the difference between a defect and a failure?</li>
+      <li>A crash on a rarely-used admin page — what Severity? What Priority? Why might they differ?</li>
+      <li>Name 3 fields that belong in a bug report and explain what each communicates to a developer.</li>
+      <li>Draw the bug lifecycle from memory. What are two alternative paths a bug can take besides being fixed?</li>
+      <li>A user story says "users can search by product name." Write one positive and one negative test case for this requirement.</li>
+      <li>What is regression testing and why does it eventually need to be automated?</li>
+    </ol>
+  </div>
+</section>
+
+<!-- HOMEWORK -->
+<section>
+  <span class="lbl">Homework</span>
+  <div class="hw">
+    <h3>🐛 Lesson 3 Homework — Write a Real Bug Report</h3>
+    <ol>
+      <li>Choose any app or website you use regularly</li>
+      <li>Perform exploratory testing — look for UI issues, errors, unexpected behaviour, edge cases</li>
+      <li>Find a real problem (broken feature, wrong error message, missing validation, UI glitch...)</li>
+      <li>Submit it as a 🔗 <a href="https://github.com/tanjaq/Bug-Reporting/issues" target="_blank">GitHub Issue</a>: 
+        <ul>
+          <li>Click <strong>New Issue</strong> → select the <strong>Bug Report Template</strong> — it has all the fields pre-filled for you</li>
+          <li>Existing issues in the repo are real examples using the same template — use them as a reference</li>
+        </ul>
+      </li>
+    </ol>
+    <p style="font-size:.65em;margin-top:.4em;color:#aaa">Also answer: <br><em>Why did you choose this bug? <br> What severity and priority would you assign, and why?</em></p>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+<script>
+Reveal.initialize({hash:true,progress:true,slideNumber:'c/t',transition:'slide',transitionSpeed:'fast',plugins:[RevealHighlight]});
+</script>
+</body>
+</html>
