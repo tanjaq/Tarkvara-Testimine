@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bonus – CI/CD Pipelines</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/black.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/monokai.css">
+<style>
+:root{--blue:#4fc3f7;--green:#81c784;--orange:#ffb74d;--red:#e57373;--purple:#ce93d8;}
+.reveal{font-family:'Segoe UI',system-ui,sans-serif;font-size:34px;}
+.reveal h2{color:var(--blue);font-size:0.95em;}
+.reveal h3{color:var(--green);margin-bottom:.3em;font-size:0.85em;}
+.reveal p{font-size:.60em;line-height:1.5;}.reveal li{font-size:.68em;line-height:1.5;}
+.reveal pre{font-size:.44em;width:100%;box-shadow:none;}
+.reveal ul{text-align:left;margin-left:1em;}
+.reveal blockquote{width:100%;box-sizing:border-box;border-left:4px solid var(--blue);padding:.4em 1em;font-style:italic;color:#ccc;background:rgba(79,195,247,.06);margin:.5em 0;font-size:.60em;}
+.lbl{font-size:.38em;letter-spacing:3px;text-transform:uppercase;color:#888;display:block;margin-bottom:.2em;}
+.divider{width:40px;height:3px;background:var(--blue);margin:.3em auto .6em;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:left;}
+.card{background:rgba(255,255,255,.05);border-left:4px solid var(--blue);padding:8px 12px;border-radius:0 5px 5px 0;font-size:.65em;line-height:1.5;}
+.card.g{border-left-color:var(--green);}
+.card.o{border-left-color:var(--orange);}
+.card.r{border-left-color:var(--red);}
+.card.p{border-left-color:var(--purple);}
+.card strong{display:block;margin-bottom:.15em;}
+.file-tree{font-family:monospace;font-size:.58em;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 18px;text-align:left;line-height:1.9;color:#ddd;}
+.file-tree .dir{color:var(--blue);}
+.file-tree .file{color:#ccc;}
+.file-tree .hl{color:var(--green);font-weight:bold;}
+.file-tree .comment{color:#555;}
+.nav{position:fixed;top:12px;right:12px;z-index:999;font-size:.55em;display:flex;gap:8px;}
+.nav a{color:#555;text-decoration:none;padding:3px 8px;border:1px solid #333;border-radius:5px;}
+.nav a:hover{color:#fff;border-color:#fff;}
+</style>
+</head>
+<body>
+<div class="nav"><a href="lesson-09.html">← L9</a><a href="index.html">↩ All</a></div>
+<div class="reveal"><div class="slides">
+
+<!-- TITLE -->
+<section data-background-gradient="linear-gradient(135deg,#0f0c29,#302b63,#24243e)">
+  <span class="lbl">Bonus Lesson · No homework</span>
+  <h2>CI/CD Pipelines</h2>
+  <div class="divider"></div>
+  <p style="font-size:.62em">What is CI · GitHub Actions · Workflow file structure · Running Playwright in the cloud</p>
+  <p style="font-size:.5em;color:#555;margin-top:.8em">→ next slide &nbsp;|&nbsp; ESC overview</p>
+</section>
+
+<!-- WHAT IS CI -->
+<section>
+  <span class="lbl">Concept</span>
+  <h2>What Is CI?</h2>
+  <p>CI — Continuous Integration — means every code change automatically triggers a build and test run in the cloud.</p>
+  <div class="g3" style="margin-top:.5em">
+    <div class="card r">
+      <strong>Without CI</strong>
+      Tests only run when someone remembers to run them locally. Broken code reaches <code>main</code>. The next person pulls a broken branch.
+    </div>
+    <div class="card g">
+      <strong>With CI</strong>
+      Every push and every PR triggers an automated run. If tests fail, the PR is blocked before anyone reviews it.
+    </div>
+    <div class="card">
+      <strong>What you get</strong>
+      A green or red status badge on every PR. A downloadable HTML report. A permanent link to prove your tests passed.
+    </div>
+  </div>
+  <blockquote style="margin-top:.5em">CI does not replace local testing — it is the safety net that catches what slips through.</blockquote>
+</section>
+
+<!-- GITHUB ACTIONS STRUCTURE -->
+<section>
+  <span class="lbl">GitHub Actions</span>
+  <h2>Workflow File — Where &amp; How</h2>
+  <div class="g2" style="margin-top:.4em">
+    <div>
+      <div class="file-tree">
+        <div><span class="dir">playwright-kriso/</span></div>
+        <div>&nbsp;&nbsp;<span class="dir">.github/</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="dir">workflows/</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl">playwright.yml</span> <span class="comment">← the pipeline</span></div>
+        <div>&nbsp;&nbsp;<span class="dir">tests/</span></div>
+        <div>&nbsp;&nbsp;<span class="dir">pages/</span></div>
+        <div>&nbsp;&nbsp;<span class="file">package.json</span></div>
+        <div>&nbsp;&nbsp;<span class="file">playwright.config.ts</span></div>
+      </div>
+      <div class="card g" style="margin-top:8px">
+        <strong>GitHub reads this automatically</strong>
+        Any <code>.yml</code> file inside <code>.github/workflows/</code> becomes a workflow. No registration — just push the file.
+      </div>
+    </div>
+    <pre><code class="yaml">name: Playwright E2E Tests
+
+on:           # when to run
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+      - # ... install + run steps</code></pre>
+  </div>
+</section>
+
+<!-- INSTALL STEPS -->
+<section>
+  <span class="lbl">Steps</span>
+  <h2>Install Steps</h2>
+  <div class="g2" style="margin-top:.4em">
+    <pre style="font-size:.40em"><code class="yaml">steps:
+  # 1 — check out your code
+  - uses: actions/checkout@v4
+
+  # 2 — set up Node.js
+  - uses: actions/setup-node@v4
+    with:
+      node-version: '20'
+      cache: 'npm'
+
+  # 3 — install npm packages
+  - name: Install dependencies
+    run: npm ci
+
+  # 4 — install Playwright + browser
+  - name: Install Playwright browsers
+    run: npx playwright install --with-deps chromium</code></pre>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div class="card g">
+        <strong>actions/checkout@v4</strong>
+        Clones your repo onto the runner. Already pre-filled in the scaffold.
+      </div>
+      <div class="card o">
+        <strong>actions/setup-node@v4</strong>
+        Installs Node 20 and enables npm caching so repeated runs don't re-download packages.
+      </div>
+      <div class="card p">
+        <strong>npm ci</strong>
+        Like <code>npm install</code> but reads <code>package-lock.json</code> exactly — reproducible installs, no version drift.
+      </div>
+      <div class="card">
+        <strong>--with-deps chromium</strong>
+        Installs Chromium only and its OS dependencies. Faster than installing all browsers.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RUN AND UPLOAD -->
+<section>
+  <span class="lbl">Steps</span>
+  <h2>Run Tests &amp; Upload Report</h2>
+  <div class="g2" style="margin-top:.4em">
+    <pre><code class="yaml">  # 5 — run all tests
+  - name: Run Playwright tests
+    run: npx playwright test
+
+  # 6 — upload the HTML report
+  - name: Upload test report
+    if: always()
+    uses: actions/upload-artifact@v4
+    with:
+      name: playwright-report
+      path: playwright-report/
+      retention-days: 14</code></pre>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="card g">
+        <strong>npx playwright test</strong>
+        Runs all tests. The step fails if any test fails, which marks the whole job red.
+      </div>
+      <div class="card o">
+        <strong>if: always()</strong>
+        Without this, step 6 is skipped when tests fail — and you lose the report exactly when you need it most.
+      </div>
+      <div class="card p">
+        <strong>retention-days: 14</strong>
+        GitHub keeps the artifact for 14 days. Download it from the Actions run page before it expires.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- READING RESULTS -->
+<section>
+  <span class="lbl">Results</span>
+  <h2>Reading the Pipeline Results</h2>
+  <div class="g3" style="margin-top:.5em">
+    <div class="card g">
+      <strong>1. Open the Actions tab</strong>
+      In your GitHub repo, click <strong>Actions</strong>. Each push and PR shows up as a run with a green ✓ or red ✗.
+    </div>
+    <div class="card o">
+      <strong>2. Click into the run</strong>
+      Open the run → open the <strong>e2e</strong> job → see each step. Failed steps show the error output inline.
+    </div>
+    <div class="card p">
+      <strong>3. Download the report</strong>
+      Scroll to the bottom of the run page → <strong>Artifacts</strong> → download <code>playwright-report</code>. Unzip and open <code>index.html</code>.
+    </div>
+    <div class="card g">
+      <strong>4. Copy the run URL</strong>
+      The URL in your browser on the run page is the link to paste into your PR description.
+    </div>
+    <div class="card r">
+      <strong>Red run = fix and push again</strong>
+      Fix the tests, push — a new run starts and the status updates automatically.
+    </div>
+    <div class="card">
+      <strong>Check on PRs too</strong>
+      Open your PR → scroll down — the checks section shows the run status. Reviewers see it before reading a single line of code.
+    </div>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/highlight/highlight.js"></script>
+<script>
+Reveal.initialize({
+  hash:true,plugins:[RevealHighlight],transition:'slide',backgroundTransition:'fade',
+  width:1100,height:700,margin:0.06
+});
+</script>
+</body></html>
