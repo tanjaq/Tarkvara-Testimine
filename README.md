@@ -15,6 +15,15 @@ This repository contains:
 
 ---
 
+## 💡 Getting Started
+
+1. Visit the live course: https://tanjaq.github.io/Tarkvara-Testimine/
+2. Click on any lesson card to start learning
+3. Fork the relevant homework repo when you reach that lesson
+4. Open a Pull Request when your work is ready
+
+---
+
 ## 📝 Homework Assignments
 
 | Lesson & HW | Description | Where to submit |
@@ -27,15 +36,6 @@ This repository contains:
 | 6 | User-Register — write integration tests with Jest + Supertest, mock external services. Two tasks. | [User-Register](https://github.com/tanjaq/User-Register) |
 | 7 | API testing with Postman — test 5+ endpoints on Swagger PetStore (functional, negative, edge-case). | Teams |
 | 8 + 9 + Bonus | Playwright E2E tests for Kriso.ee — flat tests (Task 1), Page Object Model (Task 2), CI pipeline (Task 3). | [Playwright-Kriso](https://github.com/tanjaq/playwright-kriso) |
-
----
-
-## 💡 Getting Started
-
-1. Visit the live course: https://tanjaq.github.io/Tarkvara-Testimine/
-2. Click on any lesson card to start learning
-3. Fork the relevant homework repo when you reach that lesson
-4. Open a Pull Request when your work is ready
 
 ---
 
