@@ -41,16 +41,26 @@
 .hw{background:rgba(79,195,247,.08);border:2px solid var(--blue);border-radius:10px;padding:14px 18px;text-align:left;}
 .hw h3{color:var(--blue)!important;margin-top:0;}
 .hw a{color:var(--orange);}
+.slow-badge{display:inline-block;background:rgba(229,115,115,.2);border:1px solid var(--red);color:var(--red);border-radius:4px;padding:1px 6px;font-size:.85em;font-style:normal;}
+.flow{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:.6em 0;}
+.flow-box{background:rgba(255,255,255,.05);border:1px solid rgba(79,195,247,.4);border-radius:6px;padding:8px 14px;font-size:.58em;text-align:center;}
+.flow-arr{color:#555;font-size:.9em;}
 .pyramid{display:flex;flex-direction:column;align-items:center;gap:4px;margin:.5em auto;}
 .pyr-layer{display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:.6em;font-weight:600;color:#fff;}
 .pyr-layer.active{box-shadow:0 0 0 3px var(--orange);}
 .nav{position:fixed;top:12px;right:12px;z-index:999;font-size:.55em;display:flex;gap:8px;}
 .nav a{color:#555;text-decoration:none;padding:3px 8px;border:1px solid #333;border-radius:5px;}
 .nav a:hover{color:#fff;border-color:#fff;}
-.slow-badge{display:inline-block;background:rgba(229,115,115,.2);border:1px solid var(--red);color:var(--red);border-radius:4px;padding:1px 6px;font-size:.85em;font-style:normal;}
-.flow{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:.6em 0;}
-.flow-box{background:rgba(255,255,255,.05);border:1px solid rgba(79,195,247,.4);border-radius:6px;padding:8px 14px;font-size:.58em;text-align:center;}
-.flow-arr{color:#555;font-size:.9em;}
+.method{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.75em;font-weight:700;font-family:monospace;margin-right:4px;}
+.get{background:rgba(129,199,132,.2);color:var(--green);border:1px solid var(--green);}
+.post{background:rgba(255,183,77,.2);color:var(--orange);border:1px solid var(--orange);}
+.put{background:rgba(79,195,247,.2);color:var(--blue);border:1px solid var(--blue);}
+.del{background:rgba(229,115,115,.2);color:var(--red);border:1px solid var(--red);}
+.patch{background:rgba(206,147,216,.2);color:var(--purple);border:1px solid var(--purple);}
+.crud-table{width:100%;border-collapse:collapse;font-size:.60em;margin:.5em 0;}
+.crud-table th{padding:6px 10px;text-align:left;font-weight:700;border-bottom:1px solid rgba(255,255,255,.1);}
+.crud-table td{padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top;}
+.crud-table tr:last-child td{border-bottom:none;}
 </style>
 </head>
 <body>
@@ -62,7 +72,7 @@
   <span class="lbl">Lesson 6 of 9 · Automation continues</span>
   <h2>API Testing &amp; Mocking</h2>
   <div class="divider"></div>
-  <p style="font-size:.62em">Integration Testing · REST APIs · Supertest · Mocking · jest.mock · Dependency Injection</p>
+  <p style="font-size:.62em">APIs · REST · CRUD · Integration Testing · Supertest · Mocking · jest.mock</p>
   <p style="font-size:.5em;color:#555;margin-top:.8em">→ next slide &nbsp;|&nbsp; ESC overview</p>
 </section>
 
@@ -70,14 +80,14 @@
 <section>
   <span class="lbl">Lesson Plan</span>
   <div class="plan">
-    <div class="plan-title">Lesson 6: API Testing &amp; Mocking <br> Focus: Testing code that depends on external systems</div>
+    <div class="plan-title">Lesson 6: API Testing &amp; Mocking <br> Focus: What APIs are, how to test them, and how to handle slow dependencies</div>
     <div class="plan-grid">
       <div class="plan-topics">
-        <p><span>1.</span> Where API tests fit — integration layer of the testing pyramid</p>
-        <p><span>2.</span> REST APIs — HTTP methods, status codes, JSON request/response</p>
-        <p><span>3.</span> Integration testing with Supertest — testing the User-Register endpoint</p>
+        <p><span>1.</span> What is an API — definition, types, real-world usage</p>
+        <p><span>2.</span> CRUD &amp; HTTP methods — the link between database operations and REST</p>
+        <p><span>3.</span> Integration testing — where API tests fit in the pyramid</p>
         <p><span>4.</span> The problem with slow dependencies — why tests get stuck</p>
-        <p><span>5.</span> Mocking — what it is, why we need it, jest.mock in practice</p>
+        <p><span>5.</span> Mocking — what it is, why we need it, how jest.mock works</p>
       </div>
       <div>
         <div class="plan-engage"><strong>Teams Engagement:</strong> Run both test files (app.test.js and app.mock.test.js) — compare how long each takes. Discuss: why is one 6× faster?</div>
@@ -87,11 +97,184 @@
   </div>
 </section>
 
-<!-- TESTING PYRAMID REVISITED -->
+<!-- WHAT IS AN API -->
+<section>
+  <span class="lbl">Introduction</span>
+  <h3>What Is an API?</h3>
+  <p>An <strong>API (Application Programming Interface)</strong> is a contract between two software systems — it defines what requests one system can make, and what responses it will get back.</p>
+  <div class="g2" style="margin-top:.5em">
+    <div>
+      <div class="card" style="margin-bottom:6px">
+        <strong>The analogy</strong>
+        A restaurant menu is an API. You don't need to know how the kitchen works — you pick from what's offered, and get back a defined result.
+      </div>
+      <div class="card g">
+        <strong>Why APIs exist</strong>
+        <ul>
+          <li>Let systems talk without exposing internals</li>
+          <li>Reuse functionality across many clients</li>
+          <li>Enable third parties to build on your platform</li>
+          <li>Separate frontend from backend</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="card o" style="margin-bottom:6px">
+        <strong>How APIs are used</strong>
+        <ul>
+          <li><strong>Integration</strong> — connect different systems (shop → payment provider)</li>
+          <li><strong>Data access</strong> — expose data to developers without DB access</li>
+          <li><strong>Automation</strong> — systems interact without human involvement</li>
+        </ul>
+      </div>
+      <div class="card r">
+        <strong>Real-world examples</strong>
+        <ul>
+          <li>"Continue with Google" — OAuth API, no password handling</li>
+          <li>momondo.com — calls hundreds of airline APIs at once</li>
+          <li>Google Maps — navigation in thousands of third-party apps</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- API ARCHITECTURE TYPES -->
+<section>
+  <span class="lbl">API Types</span>
+  <h3>API Architecture Styles</h3>
+  <div class="g2" style="margin-top:.3em">
+    <div>
+      <div class="card" style="margin-bottom:6px">
+        <strong>REST (Representational State Transfer)</strong>
+        Uses HTTP methods on resource URLs. Stateless. Returns JSON or XML. The dominant style for web and mobile APIs today.
+        <br><em style="color:#aaa;font-size:.9em">Used by: Twitter, Stripe, GitHub, User-Register</em>
+      </div>
+      <div class="card g" style="margin-bottom:6px">
+        <strong>SOAP (Simple Object Access Protocol)</strong>
+        XML-based, strict standards and contracts. Verbose but reliable. Common in banking, insurance, and enterprise legacy systems.
+        <br><em style="color:#aaa;font-size:.9em">Used by: PayPal (legacy), many bank integrations, SAP</em>
+      </div>
+      <div class="card o">
+        <strong>GraphQL</strong>
+        One endpoint — client asks for exactly the fields it needs. No over- or under-fetching.
+        <br><em style="color:#aaa;font-size:.9em">Used by: GitHub, Shopify, Facebook, Airbnb</em>
+      </div>
+    </div>
+    <div>
+      <div class="card p" style="margin-bottom:6px">
+        <strong>Webhooks</strong>
+        The server calls <em>you</em> when something happens. You register a URL; the provider sends a POST when an event fires — push, not pull.
+        <br><em style="color:#aaa;font-size:.9em">Used by: GitHub (push events), Stripe (payments), Twilio (SMS)</em>
+      </div>
+      <div class="card r" style="margin-bottom:6px">
+        <strong>gRPC (Google Remote Procedure Call)</strong>
+        Binary protocol over HTTP/2. Very fast. Uses Protocol Buffers (not JSON). Not human-readable.
+        <br><em style="color:#aaa;font-size:.9em">Used by: Google, Netflix, internal microservices</em>
+      </div>
+      <div class="card" style="font-size:.60em">
+        <strong>In this course → REST</strong>
+        Most common, best tooling, easiest to test. Everything we cover uses REST.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CRUD & HTTP METHODS -->
+<section>
+  <span class="lbl">REST &amp; Databases</span>
+  <h3>CRUD Operations &amp; HTTP Methods</h3>
+  <p>REST maps directly onto the four basic database operations. Every REST endpoint is essentially one of these four things.</p>
+  <table class="crud-table" style="margin-top:.5em">
+    <tr>
+      <th style="color:var(--blue)">CRUD</th>
+      <th style="color:var(--blue)">HTTP Method</th>
+      <th style="color:var(--blue)">Database operation</th>
+      <th style="color:var(--blue)">User-Register example</th>
+      <th style="color:var(--blue)">Typical status</th>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--orange)">Create</strong></td>
+      <td><span class="method post">POST</span></td>
+      <td><code>INSERT INTO ...</code></td>
+      <td><code>POST /users</code></td>
+      <td><code>200 / 201</code></td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--green)">Read</strong></td>
+      <td><span class="method get">GET</span></td>
+      <td><code>SELECT * FROM ...</code></td>
+      <td><code>GET /users/{id}</code></td>
+      <td><code>200 / 404</code></td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--blue)">Update</strong></td>
+      <td><span class="method put">PUT</span> <span class="method patch">PATCH</span></td>
+      <td><code>UPDATE ... SET ...</code></td>
+      <td><code>PUT /users/{id}</code></td>
+      <td><code>200 / 404</code></td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--red)">Delete</strong></td>
+      <td><span class="method del">DELETE</span></td>
+      <td><code>DELETE FROM ...</code></td>
+      <td><code>DELETE /users/{id}</code></td>
+      <td><code>200 / 404</code></td>
+    </tr>
+  </table>
+  <div class="g2" style="margin-top:.4em">
+    <div class="card" style="font-size:.60em">
+      <strong>PUT vs PATCH</strong>
+      PUT replaces the entire resource — send all fields. PATCH updates only the fields you include (partial update).
+    </div>
+    <div class="card o" style="font-size:.60em">
+      <strong>GET is safe &amp; idempotent</strong>
+      It never changes data. Calling it 100 times has the same result as once — important for test design.
+    </div>
+  </div>
+</section>
+
+<!-- HTTP STATUS CODES -->
+<section>
+  <span class="lbl">HTTP Status Codes</span>
+  <h3>Reading the Response Code</h3>
+  <p>The status code is the first thing to assert in any API test — it tells you whether the server understood and processed the request correctly.</p>
+  <div class="g3" style="margin-top:.4em">
+    <div class="card g">
+      <strong>2xx — Success</strong>
+      <ul>
+        <li><code>200</code> OK — request succeeded</li>
+        <li><code>201</code> Created — resource was created</li>
+        <li><code>204</code> No Content — success, no body</li>
+      </ul>
+    </div>
+    <div class="card o">
+      <strong>4xx — Client Error</strong>
+      <ul>
+        <li><code>400</code> Bad Request — invalid input</li>
+        <li><code>401</code> Unauthorised — missing/invalid token</li>
+        <li><code>403</code> Forbidden — authenticated, no permission</li>
+        <li><code>404</code> Not Found — resource doesn't exist</li>
+        <li><code>422</code> Unprocessable — validation failed</li>
+      </ul>
+    </div>
+    <div class="card r">
+      <strong>5xx — Server Error</strong>
+      <ul>
+        <li><code>500</code> Internal Server Error — server crashed</li>
+        <li><code>502</code> Bad Gateway — upstream service failed</li>
+        <li><code>503</code> Service Unavailable — overloaded</li>
+      </ul>
+    </div>
+  </div>
+  <blockquote style="margin-top:.5em">A 500 in response to bad user input is always a bug — the server should validate and return 400, never crash.</blockquote>
+</section>
+
+<!-- TESTING PYRAMID -->
 <section>
   <span class="lbl">The Testing Pyramid</span>
-  <h3>Where We Are Now</h3>
-  <p>Last lesson: unit tests at the base. This lesson: the <strong>integration / API layer</strong>.</p>
+  <h3>Where API Tests Fit</h3>
+  <p>Unit tests cover individual functions. API tests cover the layer above — how components work together over HTTP.</p>
   <div class="g2" style="margin-top:.6em;align-items:center">
     <div class="pyramid">
       <div class="pyr-layer" style="width:220px;padding:10px;background:rgba(229,115,115,.25);border:1px solid var(--red)">E2E / UI Tests</div>
@@ -105,64 +288,22 @@
           <li>Components work correctly together</li>
           <li>HTTP routing and status codes are right</li>
           <li>Request parsing and response format</li>
-          <li>Validation logic plugged into the API</li>
+          <li>Validation logic is correctly wired into the API</li>
         </ul>
       </div>
       <div class="card r" style="font-size:.60em">
         <strong>Trade-off vs unit tests:</strong>
-        Slower to run, harder to isolate failures — but catch problems that unit tests miss (wiring, middleware, routing).
+        Slower to run, harder to isolate failures — but catch problems that unit tests miss: wiring, middleware, routing.
       </div>
     </div>
   </div>
 </section>
 
-<!-- REST API BASICS -->
-<section>
-  <span class="lbl">REST APIs</span>
-  <h3>What Is a REST API?</h3>
-  <p>A <strong>REST API</strong> is a server that accepts HTTP requests and returns structured responses (usually JSON).</p>
-  <div class="g2" style="margin-top:.5em">
-    <div>
-      <div class="card" style="margin-bottom:6px">
-        <strong>HTTP Methods</strong>
-        <code>GET</code> — read data<br>
-        <code>POST</code> — create new resource<br>
-        <code>PUT / PATCH</code> — update<br>
-        <code>DELETE</code> — remove
-      </div>
-      <div class="card o">
-        <strong>Status Codes</strong>
-        <code>200</code> OK &nbsp; <code>201</code> Created<br>
-        <code>400</code> Bad Request<br>
-        <code>401</code> Unauthorised<br>
-        <code>404</code> Not Found &nbsp; <code>500</code> Server Error
-      </div>
-    </div>
-    <div>
-      <pre><code class="http"># Request
-POST /users
-Content-Type: application/json
-
-{
-  "username": "Username",
-  "password": "Password123",
-  "email": "student@example.com"
-}
-
-# Success response  →  200 OK
-{ "userId": "1", "message": "Valid User" }
-
-# Failure response  →  400 Bad Request
-{ "error": "Invalid User" }</code></pre>
-    </div>
-  </div>
-</section>
-
-<!-- USER-REGISTER PROJECT OVERVIEW -->
+<!-- USER-REGISTER ARCHITECTURE -->
 <section>
   <span class="lbl">Project Overview</span>
   <h3>User-Register Architecture</h3>
-  <p>A single endpoint <code>POST /users</code> that validates three fields before accepting a registration.</p>
+  <p>A single endpoint <code>POST /users</code> that runs three validators before accepting a registration.</p>
   <div class="flow">
     <div class="flow-box">HTTP Request<br><code>POST /users</code></div>
     <div class="flow-arr">→</div>
@@ -170,34 +311,31 @@ Content-Type: application/json
     <div class="flow-arr">+</div>
     <div class="flow-box" style="border-color:var(--orange)">validatePassword<br><small style="color:#aaa">8+ chars, upper, lower, digit</small></div>
     <div class="flow-arr">+</div>
-    <div class="flow-box" style="border-color:var(--red)">validateEmail <em class="slow-badge">slow</em><br><small style="color:#aaa">regex + simulated delay</small></div>
+    <div class="flow-box" style="border-color:var(--red)">validateEmail <em class="slow-badge">slow</em><br><small style="color:#aaa">simulates external service</small></div>
     <div class="flow-arr">→</div>
     <div class="flow-box" style="border-color:var(--green)">200 / 400<br>Response</div>
   </div>
-  <pre><code class="javascript">// app.js — validators are injected, not hard-coded
-function createApp(validateUsername, validatePassword, validateEmail) {
-  const app = express();
-  app.post('/users', async (req, res) => {
-    const { username, password, email } = req.body;
-    const valid = validateUsername(username)
-               && validatePassword(password)
-               && validateEmail(email);        // ← called on every request
-    if (valid) {
-      res.send({ userId: '1', message: 'Valid User' });
-    } else {
-      res.status(400).send({ error: 'Invalid User' });
-    }
-  });
-  return app;
-}</code></pre>
-  <blockquote>The validators are passed in as arguments — this is <strong>Dependency Injection</strong>. It makes them swappable in tests.</blockquote>
+  <div class="g2" style="margin-top:.5em">
+    <div class="card" style="font-size:.62em">
+      <strong>Dependency Injection pattern</strong>
+      <code>createApp(validateUsername, validatePassword, validateEmail)</code> — the validators are <em>passed in</em>, not hard-coded inside the app. This makes them swappable: real validators in production, mock validators in tests.
+    </div>
+    <div class="card o" style="font-size:.62em">
+      <strong>Why this matters for testing</strong>
+      <ul>
+        <li>You can pass a fast fake instead of the slow real validator</li>
+        <li>Tests stay independent of external services</li>
+        <li>No special setup needed — just pass a different function</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <!-- SUPERTEST -->
 <section>
   <span class="lbl">Integration Testing</span>
   <h3>Testing HTTP APIs with Supertest</h3>
-  <p><strong>Supertest</strong> lets you send real HTTP requests to your Express app inside a Jest test — no browser, no running server.</p>
+  <p><strong>Supertest</strong> lets you send real HTTP requests to your Express app inside a Jest test — no browser, no running server needed.</p>
   <div class="g2" style="margin-top:.5em">
     <div>
       <div class="card g" style="margin-bottom:6px">
@@ -210,117 +348,70 @@ function createApp(validateUsername, validatePassword, validateEmail) {
         </ul>
       </div>
       <div class="card" style="font-size:.60em">
-        <strong>Install:</strong>
-        <code>npm install --save-dev supertest</code>
+        <strong>Install:</strong> <code>npm install --save-dev supertest</code>
       </div>
     </div>
     <div>
-      <pre><code class="javascript">const request = require('supertest');
-const createApp = require('./app');
-const validateUsername = require('./validation/validateUsername');
-const validatePassword = require('./validation/validatePassword');
-const validateEmail  = require('./validation/validateEmail');
-
-const app = createApp(
-  validateUsername,
-  validatePassword,
-  validateEmail            // real validator
-);
-
-test('valid user returns 200', async () => {
-  const response = await request(app)
-    .post('/users')
-    .send({
-      username: 'Username',
-      password: 'Password123',
-      email: 'student@example.com'
-    });
-
-  expect(response.statusCode).toBe(200);
-});</code></pre>
+      <div class="card o" style="margin-bottom:6px">
+        <strong>What you assert on:</strong>
+        <ul>
+          <li><code>response.statusCode</code> — 200, 400, etc.</li>
+          <li><code>response.body</code> — the JSON returned</li>
+          <li><code>response.headers</code> — Content-Type, etc.</li>
+        </ul>
+      </div>
+      <div class="card p" style="font-size:.62em">
+        <strong>app.test.js — the integration test file</strong>
+        Uses the <strong>real</strong> validators. Creates the app with <code>createApp(validateUsername, validatePassword, validateEmail)</code>, then sends POST requests with <code>request(app).post('/users').send({...})</code> and asserts status codes and body fields.
+      </div>
     </div>
   </div>
-</section>
-
-<!-- APP.TEST.JS WALKTHROUGH -->
-<section>
-  <span class="lbl">app.test.js</span>
-  <h3>Integration Tests — Real Validators</h3>
-  <p>Tests are grouped by scenario using <code>describe</code>. Each test makes one HTTP request and asserts one thing.</p>
-  <pre><code class="javascript">describe('given correct username and password', () => {
-  test('return status 200', async () => {
-    const response = await request(app).post('/users').send({
-      username: 'Username',
-      password: 'Password123',
-      email: 'student@example.com'
-    });
-    expect(response.statusCode).toBe(200);
-  });
-
-  test('returns userId', async () => {
-    const response = await request(app).post('/users').send({
-      username: 'Username',
-      password: 'Password123',
-      email: 'student@example.com'
-    });
-    expect(response.body.userId).toBeDefined();
-  });
-});
-
-describe('given incorrect or missing username and password', () => {
-  test('return status 400', async () => {
-    const response = await request(app).post('/users').send({
-      username: 'user',
-      password: 'password',
-      email: 'not-an-email'
-    });
-    expect(response.statusCode).toBe(400);
-  });
-});</code></pre>
 </section>
 
 <!-- THE PROBLEM -->
 <section>
   <span class="lbl">The Problem</span>
   <h3>Why Are These Tests So Slow?</h3>
-  <p>Open <code>validation/validateEmail.js</code> and look at what it does:</p>
-  <pre><code class="javascript">function validateEmail(email) {
-  // Intentionally slow — simulates a real-world external service call
-  // (e.g. checking email validity against a remote API)
-  const start = Date.now();
-  while (Date.now() - start < 2000) {
-    // busy-wait for 2 seconds on every call
-  }
-
-  if (!email || typeof email !== 'string') return false;
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-  return re.test(email);
-}
-
-module.exports = validateEmail;</code></pre>
+  <p><code>validateEmail.js</code> contains an intentional busy-wait of <strong>2 seconds per call</strong> — simulating a real-world call to an external email verification service.</p>
   <div class="g2" style="margin-top:.5em">
-    <div class="card r">
-      <strong>Every test that calls the real validateEmail waits 2 seconds.</strong>
-      3 tests = 6 seconds minimum. A full suite of 30 tests = 1 minute just waiting.
+    <div>
+      <div class="card r" style="margin-bottom:6px">
+        <strong>The impact on tests:</strong>
+        <ul>
+          <li>Every test that calls the real validator waits 2 s</li>
+          <li>3 tests = 6+ seconds minimum</li>
+          <li>A full suite of 30 tests = 1 minute just waiting</li>
+          <li>Developers stop running tests as often</li>
+        </ul>
+      </div>
+      <div class="card o">
+        <strong>In the real world this could be:</strong>
+        <ul>
+          <li>A call to an external email verification API</li>
+          <li>A database lookup</li>
+          <li>A network request to a third-party service</li>
+          <li>A call to a payment gateway</li>
+        </ul>
+      </div>
     </div>
-    <div class="card o">
-      <strong>In the real world this could be:</strong>
-      <ul>
-        <li>An external email verification API</li>
-        <li>A database lookup</li>
-        <li>A network call to a third-party service</li>
-        <li>A payment gateway</li>
-      </ul>
+    <div>
+      <div class="card p" style="margin-bottom:6px">
+        <strong>What are we actually testing?</strong>
+        In <code>app.test.js</code> we are testing the API routing and validation wiring — not the email validation logic itself. That logic already has its own unit tests in <code>validateEmail.test.js</code>.
+      </div>
+      <div class="card g" style="font-size:.60em">
+        <strong>The solution:</strong> replace the slow real validator with a fast fake that behaves the same way — same inputs, same outputs, but instant. This is called <strong>mocking</strong>.
+      </div>
     </div>
   </div>
-  <blockquote>The real validateEmail is not what we are testing here — we are testing the API routing and validation wiring. We should not be blocked by it.</blockquote>
+  <blockquote>We should not be blocked by a dependency that is not what we are testing.</blockquote>
 </section>
 
 <!-- WHAT IS A MOCK -->
 <section>
   <span class="lbl">Mocking</span>
   <h3>What Is a Mock?</h3>
-  <p>A <strong>mock</strong> replaces a real dependency with a fake one that you control — same interface, predictable behaviour, no side effects.</p>
+  <p>A <strong>mock</strong> replaces a real dependency with a fake one you control — same interface, predictable behaviour, no side effects.</p>
   <div class="g2" style="margin-top:.5em">
     <div>
       <div class="card g" style="margin-bottom:6px">
@@ -335,87 +426,63 @@ module.exports = validateEmail;</code></pre>
     </div>
     <div>
       <div class="card o" style="margin-bottom:6px">
-        <strong>What can you mock?</strong>
+        <strong>What can you mock in Jest?</strong>
         <ul>
-          <li>Modules (<code>jest.mock('./path')</code>)</li>
-          <li>Functions (<code>jest.fn()</code>)</li>
-          <li>Return values (<code>mockReturnValue()</code>)</li>
-          <li>Implementations (<code>mockImplementation()</code>)</li>
+          <li>Whole modules — <code>jest.mock('./path')</code></li>
+          <li>Individual functions — <code>jest.fn()</code></li>
+          <li>Return values — <code>mockReturnValue()</code></li>
+          <li>Implementations — <code>mockImplementation()</code></li>
         </ul>
       </div>
     </div>
   </div>
   <div class="g3" style="margin-top:.4em">
-    <div class="card" style="font-size:.60em"><strong>Mock</strong>Verifiable fake — records calls, can assert on them</div>
+    <div class="card" style="font-size:.60em"><strong>Mock</strong>Verifiable fake — records calls, lets you assert on them</div>
     <div class="card g" style="font-size:.60em"><strong>Stub</strong>Returns canned responses — doesn't record calls</div>
-    <div class="card p" style="font-size:.60em"><strong>Spy</strong>Wraps the real function — records calls but still runs real code</div>
+    <div class="card p" style="font-size:.60em"><strong>Spy</strong>Wraps the real function — records calls but still runs the real code</div>
   </div>
 </section>
 
-<!-- JEST.MOCK IN PRACTICE -->
+<!-- JEST.MOCK CONCEPT -->
 <section>
   <span class="lbl">jest.mock</span>
-  <h3>Mocking a Module with Jest</h3>
-  <p><code>jest.mock()</code> intercepts <code>require()</code> calls and replaces the module with your fake version.</p>
-  <pre><code class="javascript">// app.mock.test.js
-
-const createApp = require('./app');
-const request   = require('supertest');
-const validateUsername = require('./validation/validateUsername');
-const validatePassword = require('./validation/validatePassword');
-
-// Replace the slow real validateEmail with a fast fake
-jest.mock('./validation/validateEmail', () => {
-  return jest.fn((email) => {
-    // No 2-second wait — just a fast regex check
-    if (!email || typeof email !== 'string') return false;
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    return re.test(email);
-  });
-});
-
-const validateEmail = require('./validation/validateEmail'); // gets the mock
-const app = createApp(validateUsername, validatePassword, validateEmail);</code></pre>
+  <h3>How jest.mock Works</h3>
+  <p><code>jest.mock()</code> intercepts <code>require()</code> calls and replaces the module with your fake version before any test runs.</p>
   <div class="g2" style="margin-top:.4em">
-    <div class="card g" style="font-size:.60em">
-      <strong>jest.fn(implementation)</strong>
-      Creates a mock function. Tracks how many times it was called, with which arguments, and what it returned.
+    <div>
+      <div class="card r" style="margin-bottom:6px">
+        <strong>app.test.js — real validator</strong>
+        <ul>
+          <li>Requires the real <code>validateEmail</code></li>
+          <li>Every test call waits 2 seconds</li>
+          <li>Tests the full stack, including the slow external simulation</li>
+        </ul>
+      </div>
+      <div class="card g">
+        <strong>app.mock.test.js — mocked validator</strong>
+        <ul>
+          <li><code>jest.mock('./validation/validateEmail', () =&gt; jest.fn(...))</code></li>
+          <li>Replaces the module with a fast regex-only version</li>
+          <li>No 2-second wait — tests run in milliseconds</li>
+          <li>Same test scenarios, same assertions — just faster</li>
+        </ul>
+      </div>
     </div>
-    <div class="card o" style="font-size:.60em">
-      <strong>Important:</strong> <code>jest.mock()</code> is hoisted to the top of the file by Jest before any imports run — that is why it works even though it appears after the requires.
+    <div>
+      <div class="card o" style="margin-bottom:6px">
+        <strong>jest.fn(implementation)</strong>
+        Creates a mock function. It behaves like the real function but also <em>tracks</em> every call — how many times it was called, with which arguments, what it returned.
+      </div>
+      <div class="card p" style="font-size:.60em">
+        <strong>Hoisting</strong>
+        <code>jest.mock()</code> is automatically moved to the top of the file by Jest before any imports execute. That is why it replaces the module even when it appears after the <code>require()</code> calls.
+      </div>
+      <div class="card" style="font-size:.60em">
+        <strong>Verifying calls:</strong>
+        Because <code>jest.fn()</code> records calls, you can assert: <code>expect(validateEmail).toHaveBeenCalledWith('student@example.com')</code>
+      </div>
     </div>
   </div>
-</section>
-
-<!-- VERIFYING MOCKS -->
-<section>
-  <span class="lbl">Mock Assertions</span>
-  <h3>Verifying the Mock Was Called</h3>
-  <p>Because <code>jest.fn()</code> records every call, you can assert on <em>how</em> a dependency was used — not just the outcome.</p>
-  <pre><code class="javascript">const validateEmail = require('./validation/validateEmail'); // the mock
-
-test('validateEmail is called with the provided email', async () => {
-  await request(app).post('/users').send({
-    username: 'Username',
-    password: 'Password123',
-    email: 'student@example.com'
-  });
-
-  // Was it called at all?
-  expect(validateEmail).toHaveBeenCalled();
-
-  // Was it called with the right argument?
-  expect(validateEmail).toHaveBeenCalledWith('student@example.com');
-});
-
-test('reset mock between tests', () => {
-  // Clear call history before each test
-  beforeEach(() => {
-    validateEmail.mockClear();   // clear calls
-    // validateEmail.mockReset(); // also clear return value / implementation
-  });
-});</code></pre>
-  <blockquote>Asserting on mock calls turns a black-box test into a white-box one — you verify the wiring, not just the output.</blockquote>
 </section>
 
 <!-- REAL VS MOCK COMPARISON -->
@@ -443,7 +510,7 @@ test('reset mock between tests', () => {
           <li>3 tests ≈ &lt;200 ms to run</li>
           <li>Tests routing &amp; wiring in isolation</li>
           <li>Fast feedback — runs on every save</li>
-          <li>You control what the mock returns</li>
+          <li>You control exactly what the mock returns</li>
         </ul>
       </div>
     </div>
@@ -452,40 +519,6 @@ test('reset mock between tests', () => {
     <strong>Both have value — they test different things.</strong>
     Use mocked tests for rapid development feedback. Keep a few real integration tests to verify the actual validator still works end-to-end.
   </div>
-</section>
-
-<!-- DEPENDENCY INJECTION -->
-<section>
-  <span class="lbl">Design Pattern</span>
-  <h3>Why Dependency Injection Matters for Testing</h3>
-  <p>The reason mocking is easy in User-Register is that <code>app.js</code> uses <strong>Dependency Injection</strong>.</p>
-  <div class="g2" style="margin-top:.4em">
-    <div>
-      <pre><code class="javascript">// ❌ Hard to test — dependency is hidden inside
-function createApp() {
-  const validateEmail =
-    require('./validation/validateEmail'); // baked in
-  app.post('/users', (req, res) => {
-    // can't swap validateEmail in tests
-  });
-}</code></pre>
-      <div class="card r" style="margin-top:6px;font-size:.60em">Hard-coded dependency → you must mock the whole module OR live with the 2-second wait.</div>
-    </div>
-    <div>
-      <pre><code class="javascript">// ✅ Easy to test — dependency is injected
-function createApp(
-  validateUsername,
-  validatePassword,
-  validateEmail       // ← passed in from outside
-) {
-  app.post('/users', (req, res) => {
-    // caller decides which validator to use
-  });
-}</code></pre>
-      <div class="card g" style="margin-top:6px;font-size:.60em">Injected dependency → pass a real one in production, pass a mock in tests. No module-level hacking needed.</div>
-    </div>
-  </div>
-  <blockquote>Testable code is usually better-designed code. If something is hard to test, it is often a signal to refactor.</blockquote>
 </section>
 
 <!-- WHEN TO MOCK -->
@@ -498,8 +531,8 @@ function createApp(
       <ul>
         <li>Dependency is slow (network, DB, timers)</li>
         <li>Dependency is non-deterministic (random, time-based)</li>
-        <li>Dependency causes side effects (email, payments, SMS)</li>
-        <li>You want to test error paths that are hard to trigger</li>
+        <li>Dependency causes side effects (sends email, charges a card)</li>
+        <li>You want to test error paths that are hard to trigger for real</li>
         <li>The dependency isn't built yet</li>
       </ul>
     </div>
@@ -552,9 +585,9 @@ npx jest app.mock.test.js --verbose
       <div>
         <p style="font-size:.65em"><strong>Task 1 — Extend app.test.js:</strong></p>
         <ul style="font-size:.65em">
-          <li>Add more test cases to <code>app.test.js</code> using the real validators</li>
+          <li>Add more test cases using the real validators</li>
           <li>Cover both success and failure scenarios</li>
-          <li>Test boundary values (e.g. username exactly 6 and 30 chars)</li>
+          <li>Test boundary values (username exactly 6 and 30 chars)</li>
           <li>Test missing fields (no username, no email, etc.)</li>
           <li>Use <code>describe</code> blocks and descriptive test names</li>
           <li>Apply the AAA pattern from Lesson 5</li>
