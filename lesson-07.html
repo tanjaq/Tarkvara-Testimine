@@ -112,54 +112,33 @@
   </div>
 </section>
 
-<!-- API ARCHITECTURE TYPES -->
-<section>
-  <span class="lbl">API Types</span>
-  <h3>API Architecture Styles</h3>
-  <div class="g2" style="margin-top:.3em">
-    <div>
-      <div class="card" style="margin-bottom:6px">
-        <strong>REST (Representational State Transfer)</strong>
-        Uses HTTP methods on resource URLs. Stateless. Returns JSON or XML. The dominant style for web and mobile APIs today.
-        <br><em style="color:#aaa;font-size:.9em">Used by: Twitter, Stripe, GitHub, PetStore</em>
-      </div>
-      <div class="card g" style="margin-bottom:6px">
-        <strong>SOAP (Simple Object Access Protocol)</strong>
-        XML-based, strict standards and contracts. Verbose but reliable. Common in banking, insurance, and enterprise legacy systems.
-        <br><em style="color:#aaa;font-size:.9em">Used by: PayPal (legacy), many bank integrations, SAP</em>
-      </div>
-      <div class="card o">
-        <strong>GraphQL</strong>
-        One endpoint — client asks for exactly the fields it needs. No over- or under-fetching.
-        <br><em style="color:#aaa;font-size:.9em">Used by: GitHub, Shopify, Facebook, Airbnb</em>
-      </div>
-    </div>
-    <div>
-      <div class="card p" style="margin-bottom:6px">
-        <strong>Webhooks</strong>
-        The server calls <em>you</em> when something happens. You register a URL; the provider sends a POST when an event fires — push, not pull.
-        <br><em style="color:#aaa;font-size:.9em">Used by: GitHub (push events), Stripe (payments), Twilio (SMS)</em>
-      </div>
-      <div class="card r" style="margin-bottom:6px">
-        <strong>gRPC (Google Remote Procedure Call)</strong>
-        Binary protocol over HTTP/2. Very fast. Uses Protocol Buffers (not JSON). Not human-readable.
-        <br><em style="color:#aaa;font-size:.9em">Used by: Google, Netflix, internal microservices</em>
-      </div>
-      <div class="card" style="font-size:.60em">
-        <strong>In this course → REST</strong>
-        Most common, best tooling, easiest to test manually. Everything we do in Postman is REST.
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- API REQUEST EXAMPLES 1 -->
 <section>
   <span class="lbl">API Types — Request Examples 1/2</span>
   <h3>GraphQL &amp; SOAP</h3>
-  <div class="g2" style="margin-top:.5em">
+  <div class="g2" style="margin-top:.4em">
+        <div>
+      <div class="card g" style="margin-bottom:6px;font-size:.60em">
+        <strong>SOAP</strong> — XML-based, strict standards and contracts. Verbose but reliable. Common in banking and enterprise legacy systems.
+        <br><em style="color:#aaa">Used by: PayPal (legacy), bank integrations, SAP</em>
+      </div>
+      <pre><code class="xml">&lt;soapenv:Envelope xmlns:soapenv="..."&gt;
+  &lt;soapenv:Body&gt;
+    &lt;GetUser&gt;
+      &lt;userId&gt;42&lt;/userId&gt;
+    &lt;/GetUser&gt;
+  &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;
+
+→ &lt;GetUserResponse&gt;
+    &lt;username&gt;john&lt;/username&gt;
+  &lt;/GetUserResponse&gt;</code></pre>
+    </div>
     <div>
-      <p style="font-size:.58em;color:var(--green);font-weight:600;margin-bottom:4px">GraphQL — one endpoint, ask for exactly what you need</p>
+      <div class="card o" style="margin-bottom:6px;font-size:.60em">
+        <strong>GraphQL</strong> — One endpoint, client asks for exactly the fields it needs. No over- or under-fetching.
+        <br><em style="color:#aaa">Used by: GitHub, Shopify, Facebook, Airbnb</em>
+      </div>
       <pre><code class="graphql">POST /graphql
 
 query {
@@ -175,20 +154,6 @@ query {
     }
   }</code></pre>
     </div>
-    <div>
-      <p style="font-size:.58em;color:var(--orange);font-weight:600;margin-bottom:4px">SOAP — XML envelope, strict contract</p>
-      <pre><code class="xml">&lt;soapenv:Envelope xmlns:soapenv="..."&gt;
-  &lt;soapenv:Body&gt;
-    &lt;GetUser&gt;
-      &lt;userId&gt;42&lt;/userId&gt;
-    &lt;/GetUser&gt;
-  &lt;/soapenv:Body&gt;
-&lt;/soapenv:Envelope&gt;
-
-→ &lt;GetUserResponse&gt;
-    &lt;username&gt;john&lt;/username&gt;
-  &lt;/GetUserResponse&gt;</code></pre>
-    </div>
   </div>
 </section>
 
@@ -196,9 +161,12 @@ query {
 <section>
   <span class="lbl">API Types — Request Examples 2/2</span>
   <h3>Webhooks &amp; gRPC</h3>
-  <div class="g2" style="margin-top:.5em">
+  <div class="g2" style="margin-top:.4em">
     <div>
-      <p style="font-size:.58em;color:var(--purple);font-weight:600;margin-bottom:4px">Webhook — server pushes to your URL when an event fires</p>
+      <div class="card p" style="margin-bottom:6px;font-size:.60em">
+        <strong>Webhooks</strong> — The server calls <em>you</em> when something happens. Register a URL; the provider POSTs to it when an event fires — push, not pull.
+        <br><em style="color:#aaa">Used by: GitHub (push events), Stripe (payments), Twilio (SMS)</em>
+      </div>
       <pre><code class="json">POST https://yourapp.com/webhook
 Content-Type: application/json
 
@@ -207,12 +175,12 @@ Content-Type: application/json
   "amount": 49.99,
   "userId": 42
 }</code></pre>
-      <div class="card p" style="margin-top:.5em;font-size:.60em">
-        You don't <em>send</em> a webhook — you <em>receive</em> it. Register your URL with the provider; they POST to you when an event fires.
-      </div>
     </div>
     <div>
-      <p style="font-size:.58em;color:var(--red);font-weight:600;margin-bottom:4px">gRPC — contract defined in a .proto file, sent as binary</p>
+      <div class="card r" style="margin-bottom:6px;font-size:.60em">
+        <strong>gRPC</strong> — Binary protocol over HTTP/2. Very fast. Uses Protocol Buffers (not JSON). Not human-readable.
+        <br><em style="color:#aaa">Used by: Google, Netflix, internal microservices</em>
+      </div>
       <pre><code class="protobuf">// user.proto — defines the contract
 service UserService {
   rpc GetUser (UserRequest) returns (UserResponse);
@@ -226,9 +194,6 @@ message UserResponse {
   string username = 1;
   string email    = 2;
 }</code></pre>
-      <div class="card r" style="margin-top:.5em;font-size:.60em">
-        No JSON, no URLs — the .proto schema <em>is</em> the API contract. Calls are compiled and sent as fast binary, not human-readable text.
-      </div>
     </div>
   </div>
 </section>
@@ -237,6 +202,10 @@ message UserResponse {
 <section>
   <span class="lbl">REST APIs</span>
   <h3>Anatomy of a REST Request &amp; Response</h3>
+  <div class="card" style="margin-bottom:.5em;font-size:.60em">
+    <strong>REST (Representational State Transfer)</strong> — Uses HTTP methods on resource URLs. Stateless. Returns JSON or XML. The dominant style for web and mobile APIs today.
+    <br><em style="color:#aaa"> &nbsp;Used by: Twitter, Stripe, GitHub, PetStore</em>
+  </div>
   <div class="g2">
     <div>
       <pre><code class="http"># Request
@@ -546,7 +515,6 @@ pm.test("Returns 400 or 404 for invalid ID", function () {
       <li><strong>GET /pet/99999999</strong> — what status code do you get? Add a test asserting it is not 200</li>
       <li>Save both requests into a <strong>Collection</strong> and run it</li>
     </ol>
-    <p class="tip">Share your test results (pass/fail count) in Teams chat.</p>
   </div>
 </section>
 
@@ -558,7 +526,7 @@ pm.test("Returns 400 or 404 for invalid ID", function () {
     <div class="g2">
       <div>
         <p style="font-size:.65em"><strong>The Task:</strong></p>
-        <ul style="font-size:.65em">
+        <ul style="font-size:.75em">
           <li>Open <a href="https://petstore.swagger.io" target="_blank">petstore.swagger.io</a> and read the API docs</li>
           <li>Choose <strong>at least 5 endpoints</strong> to test (mix GET, POST, PUT, DELETE)</li>
           <li>For each endpoint write:
@@ -583,9 +551,9 @@ pm.test("Returns 400 or 404 for invalid ID", function () {
           <li>A brief report: which endpoints you tested, what you found</li>
           <li>Include test run output (screenshot or Newman report)</li>
         </ul>
-        <blockquote style="margin-top:.4em">Use the Swagger docs as your requirements spec — if the API doesn't match the spec, that is a bug worth reporting.</blockquote>
-      </div>
+        </div>
     </div>
+    <blockquote style="margin-top:.4em">Use the Swagger docs as your requirements spec, if the API doesn't match the spec, that is a bug worth reporting.</blockquote>
   </div>
 </section>
 

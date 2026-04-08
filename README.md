@@ -19,7 +19,7 @@ This repository contains:
 
 | HW | Lesson | Description | Where to submit |
 |----|--------|-------------|-----------------|
-| 1 | 1 | Reflection — write 3–5 sentences on what "quality" means to you. Discussed in class, no formal submission. | Teams |
+| 1 | 1 | Reflection — write 3–5 sentences on what "quality" means to you. Discussed in class, no formal submission. | N/A |
 | 2 | 2 | Write functional and non-functional requirements for a chosen project (e.g. cvkeskus.ee job search). | Teams |
 | 3 | 3 | Find a real bug on any website and write a full bug report as a GitHub Issue. | [Bug-Reporting](https://github.com/tanjaq/Bug-Reporting) |
 | 4 | 4 | Decision table and coverage analysis for a discount logic problem. | Teams |
