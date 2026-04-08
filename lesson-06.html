@@ -324,40 +324,30 @@
 <section>
   <span class="lbl">jest.mock</span>
   <h3>How jest.mock Works</h3>
-  <p><code>jest.mock()</code> intercepts <code>require()</code> calls and replaces the module with your fake version before any test runs.</p>
-  <div class="g2" style="margin-top:.4em">
-    <div>
-      <div class="card r" style="margin-bottom:6px">
-        <strong>app.test.js — real validator</strong>
-        <ul>
-          <li>Requires the real <code>validateEmail</code></li>
-          <li>Every test call waits 2 seconds</li>
-          <li>Tests the full stack, including the slow external simulation</li>
-        </ul>
-      </div>
-      <div class="card g">
-        <strong>app.mock.test.js — mocked validator</strong>
-        <ul>
-          <li><code>jest.mock('./validation/validateEmail', () =&gt; jest.fn(...))</code></li>
-          <li>Replaces the module with a fast regex-only version</li>
-          <li>No 2-second wait — tests run in milliseconds</li>
-          <li>Same test scenarios, same assertions — just faster</li>
-        </ul>
-      </div>
+  <p><code>jest.mock()</code> intercepts <code>require()</code> and replaces a module with your fake before any test runs.</p>
+  <div class="g3" style="margin-top:.6em">
+    <div class="card r">
+      <strong>app.test.js</strong>
+      Uses the real <code>validateEmail</code> — every call waits 2 seconds. Full stack, slow feedback.
     </div>
-    <div>
-      <div class="card o" style="margin-bottom:6px">
-        <strong>jest.fn(implementation)</strong>
-        Creates a mock function. It behaves like the real function but also <em>tracks</em> every call — how many times it was called, with which arguments, what it returned.
-      </div>
-      <div class="card p" style="font-size:.60em">
-        <strong>Hoisting</strong>
-        <code>jest.mock()</code> is automatically moved to the top of the file by Jest before any imports execute. That is why it replaces the module even when it appears after the <code>require()</code> calls.
-      </div>
-      <div class="card" style="font-size:.60em">
-        <strong>Verifying calls:</strong>
-        Because <code>jest.fn()</code> records calls, you can assert: <code>expect(validateEmail).toHaveBeenCalledWith('student@example.com')</code>
-      </div>
+    <div class="card g">
+      <strong>app.mock.test.js</strong>
+      <code>jest.mock()</code> swaps in a fast fake. Same scenarios, same assertions — runs in milliseconds.
+    </div>
+    <div class="card o">
+      <strong>jest.fn()</strong>
+      Creates a mock function that <em>tracks</em> calls — how many times, with which arguments. Lets you assert on behaviour, not just output.
+    </div>
+  </div>
+  <div class="g2" style="margin-top:.5em">
+    <div class="card p" style="font-size:.62em">
+      <strong>Hoisting</strong>
+      Jest moves <code>jest.mock()</code> to the top automatically — so it replaces the module even when it appears after the <code>require()</code> calls in your file.
+    </div>
+    <div class="card" style="font-size:.62em">
+      <strong>Verifying calls</strong>
+      <code>jest.fn()</code> records every call, so you can assert:<br>
+      <code>expect(validateEmail).toHaveBeenCalledWith('student@example.com')</code>
     </div>
   </div>
 </section>
@@ -424,33 +414,6 @@
     </div>
   </div>
   <blockquote>A test that mocks everything is not testing your code — it is testing your mocks.</blockquote>
-</section>
-
-<!-- TEAMS ACTIVITY -->
-<section>
-  <span class="lbl">Teams Activity</span>
-  <div class="teams">
-    <h3>⏱ Slow vs Fast Tests</h3>
-    <p>Clone <a href="https://github.com/tanjaq/User-Register" target="_blank">User-Register</a>, run <code>npm install</code>, then run both test files and compare:</p>
-    <div class="g2" style="margin-top:.6em">
-      <div>
-        <pre style="font-size:.85em"><code class="bash"># Run with real validateEmail
-npx jest app.test.js --verbose
-# Notice how long it takes</code></pre>
-      </div>
-      <div>
-        <pre style="font-size:.85em"><code class="bash"># Run with mocked validateEmail
-npx jest app.mock.test.js --verbose
-# Notice the difference</code></pre>
-      </div>
-    </div>
-    <ol style="font-size:.68em;margin-top:.6em">
-      <li>How long did each test suite take?</li>
-      <li>Open <code>validateEmail.js</code> — what does the busy-wait simulate?</li>
-      <li>In <code>app.mock.test.js</code>, what does <code>jest.mock()</code> replace and why?</li>
-    </ol>
-    <p class="tip">Post your times and answers in Teams chat.</p>
-  </div>
 </section>
 
 <!-- HOMEWORK -->
