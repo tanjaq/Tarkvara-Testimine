@@ -153,21 +153,13 @@
   </div>
 </section>
 
-<!-- API REQUEST EXAMPLES -->
+<!-- API REQUEST EXAMPLES 1 -->
 <section>
-  <span class="lbl">API Types — Request Examples</span>
-  <h3>How Each Type Looks in Practice</h3>
-  <div class="g2" style="margin-top:.4em">
+  <span class="lbl">API Types — Request Examples 1/2</span>
+  <h3>GraphQL &amp; SOAP</h3>
+  <div class="g2" style="margin-top:.5em">
     <div>
-      <p style="font-size:.58em;color:var(--blue);font-weight:600;margin-bottom:4px">REST — HTTP method + URL + JSON body</p>
-      <pre><code class="http">POST /users HTTP/1.1
-Content-Type: application/json
-
-{ "username": "john", "email": "john@example.com" }
-
-→ 201 Created
-{ "id": 42, "username": "john" }</code></pre>
-      <p style="font-size:.58em;color:var(--green);font-weight:600;margin:.5em 0 4px">GraphQL — one endpoint, ask for exactly what you need</p>
+      <p style="font-size:.58em;color:var(--green);font-weight:600;margin-bottom:4px">GraphQL — one endpoint, ask for exactly what you need</p>
       <pre><code class="graphql">POST /graphql
 
 query {
@@ -177,7 +169,11 @@ query {
   }
 }
 
-→ { "data": { "user": { "username": "john", "email": "john@example.com" } } }</code></pre>
+→ {
+    "data": {
+      "user": { "username": "john", "email": "john@example.com" }
+    }
+  }</code></pre>
     </div>
     <div>
       <p style="font-size:.58em;color:var(--orange);font-weight:600;margin-bottom:4px">SOAP — XML envelope, strict contract</p>
@@ -192,14 +188,47 @@ query {
 → &lt;GetUserResponse&gt;
     &lt;username&gt;john&lt;/username&gt;
   &lt;/GetUserResponse&gt;</code></pre>
-      <p style="font-size:.58em;color:var(--purple);font-weight:600;margin:.5em 0 4px">Webhook — server pushes to your URL when an event fires</p>
+    </div>
+  </div>
+</section>
+
+<!-- API REQUEST EXAMPLES 2 -->
+<section>
+  <span class="lbl">API Types — Request Examples 2/2</span>
+  <h3>Webhooks &amp; gRPC</h3>
+  <div class="g2" style="margin-top:.5em">
+    <div>
+      <p style="font-size:.58em;color:var(--purple);font-weight:600;margin-bottom:4px">Webhook — server pushes to your URL when an event fires</p>
       <pre><code class="json">POST https://yourapp.com/webhook
+Content-Type: application/json
 
 {
   "event": "payment.completed",
   "amount": 49.99,
   "userId": 42
 }</code></pre>
+      <div class="card p" style="margin-top:.5em;font-size:.60em">
+        You don't <em>send</em> a webhook — you <em>receive</em> it. Register your URL with the provider; they POST to you when an event fires.
+      </div>
+    </div>
+    <div>
+      <p style="font-size:.58em;color:var(--red);font-weight:600;margin-bottom:4px">gRPC — contract defined in a .proto file, sent as binary</p>
+      <pre><code class="protobuf">// user.proto — defines the contract
+service UserService {
+  rpc GetUser (UserRequest) returns (UserResponse);
+}
+
+message UserRequest {
+  int32 id = 1;
+}
+
+message UserResponse {
+  string username = 1;
+  string email    = 2;
+}</code></pre>
+      <div class="card r" style="margin-top:.5em;font-size:.60em">
+        No JSON, no URLs — the .proto schema <em>is</em> the API contract. Calls are compiled and sent as fast binary, not human-readable text.
+      </div>
     </div>
   </div>
 </section>
