@@ -90,7 +90,6 @@
         <p><span>5.</span> Mocking — what it is, why we need it, how jest.mock works</p>
       </div>
       <div>
-        <div class="plan-engage"><strong>Teams Engagement:</strong> Open User-Register, run both test files, compare run times — then discuss why one is 6× faster and what the solution is.</div>
         <div class="plan-hw"><strong>Homework:</strong> <br> User-Register - Ülesanne 1 &amp; 2 <br> <a href="https://github.com/tanjaq/User-Register" target="_blank">GitHub Link</a></div>
       </div>
     </div>
@@ -325,7 +324,7 @@
   <span class="lbl">jest.mock</span>
   <h3>How jest.mock Works</h3>
   <p><code>jest.mock()</code> intercepts <code>require()</code> and replaces a module with your fake before any test runs.</p>
-  <div class="g3" style="margin-top:.6em">
+  <div class="g3" style="margin-top:.8em">
     <div class="card r">
       <strong>app.test.js</strong>
       Uses the real <code>validateEmail</code> — every call waits 2 seconds. Full stack, slow feedback.
@@ -336,18 +335,7 @@
     </div>
     <div class="card o">
       <strong>jest.fn()</strong>
-      Creates a mock function that <em>tracks</em> calls — how many times, with which arguments. Lets you assert on behaviour, not just output.
-    </div>
-  </div>
-  <div class="g2" style="margin-top:.5em">
-    <div class="card p" style="font-size:.62em">
-      <strong>Hoisting</strong>
-      Jest moves <code>jest.mock()</code> to the top automatically — so it replaces the module even when it appears after the <code>require()</code> calls in your file.
-    </div>
-    <div class="card" style="font-size:.62em">
-      <strong>Verifying calls</strong>
-      <code>jest.fn()</code> records every call, so you can assert:<br>
-      <code>expect(validateEmail).toHaveBeenCalledWith('student@example.com')</code>
+      Creates a mock function that <em>tracks</em> every call — how many times, with which arguments. Assert on behaviour, not just output.
     </div>
   </div>
 </section>
