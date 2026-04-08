@@ -153,6 +153,57 @@
   </div>
 </section>
 
+<!-- API REQUEST EXAMPLES -->
+<section>
+  <span class="lbl">API Types — Request Examples</span>
+  <h3>How Each Type Looks in Practice</h3>
+  <div class="g2" style="margin-top:.4em">
+    <div>
+      <p style="font-size:.58em;color:var(--blue);font-weight:600;margin-bottom:4px">REST — HTTP method + URL + JSON body</p>
+      <pre><code class="http">POST /users HTTP/1.1
+Content-Type: application/json
+
+{ "username": "john", "email": "john@example.com" }
+
+→ 201 Created
+{ "id": 42, "username": "john" }</code></pre>
+      <p style="font-size:.58em;color:var(--green);font-weight:600;margin:.5em 0 4px">GraphQL — one endpoint, ask for exactly what you need</p>
+      <pre><code class="graphql">POST /graphql
+
+query {
+  user(id: 42) {
+    username
+    email
+  }
+}
+
+→ { "data": { "user": { "username": "john", "email": "john@example.com" } } }</code></pre>
+    </div>
+    <div>
+      <p style="font-size:.58em;color:var(--orange);font-weight:600;margin-bottom:4px">SOAP — XML envelope, strict contract</p>
+      <pre><code class="xml">&lt;soapenv:Envelope xmlns:soapenv="..."&gt;
+  &lt;soapenv:Body&gt;
+    &lt;GetUser&gt;
+      &lt;userId&gt;42&lt;/userId&gt;
+    &lt;/GetUser&gt;
+  &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;
+
+→ &lt;GetUserResponse&gt;
+    &lt;username&gt;john&lt;/username&gt;
+  &lt;/GetUserResponse&gt;</code></pre>
+      <p style="font-size:.58em;color:var(--purple);font-weight:600;margin:.5em 0 4px">Webhook — server pushes to your URL when an event fires</p>
+      <pre><code class="json">POST https://yourapp.com/webhook
+
+{
+  "event": "payment.completed",
+  "amount": 49.99,
+  "userId": 42
+}</code></pre>
+    </div>
+  </div>
+</section>
+
 <!-- REST ANATOMY -->
 <section>
   <span class="lbl">REST APIs</span>
