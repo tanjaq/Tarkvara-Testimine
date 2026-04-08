@@ -26,7 +26,7 @@ This repository contains:
 | 5 | Rental Car — write unit tests with Jest, refactor code, practice TDD. Three tasks. | [Rental-Car](https://github.com/tanjaq/Rental-Car) |
 | 6 | User-Register — write integration tests with Jest + Supertest, mock external services. Two tasks. | [User-Register](https://github.com/tanjaq/User-Register) |
 | 7 | API testing with Postman — test 5+ endpoints on Swagger PetStore (functional, negative, edge-case). | Teams |
-| 8 + 9 + Bonus | Playwright E2E tests for Kriso.ee — flat tests (Task 1), Page Object Model (Task 2), CI pipeline (Task 3). | [playwright-kriso](https://github.com/tanjaq/playwright-kriso) |
+| 8 + 9 + Bonus | Playwright E2E tests for Kriso.ee — flat tests (Task 1), Page Object Model (Task 2), CI pipeline (Task 3). | [Playwright-Kriso](https://github.com/tanjaq/playwright-kriso) |
 
 ---
 
