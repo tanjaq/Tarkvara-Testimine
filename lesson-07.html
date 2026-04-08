@@ -57,6 +57,10 @@
 .pm-tab{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:4px 4px 0 0;padding:3px 10px;font-size:.55em;color:#aaa;}
 .pm-tab.active{background:rgba(79,195,247,.12);border-color:var(--blue);color:var(--blue);}
 .pm-panel{background:rgba(255,255,255,.04);border:1px solid rgba(79,195,247,.2);border-radius:0 4px 4px 4px;padding:10px 14px;font-size:.58em;text-align:left;}
+.crud-table{width:100%;border-collapse:collapse;font-size:.60em;margin:.5em 0;}
+.crud-table th{padding:6px 10px;text-align:left;font-weight:700;border-bottom:1px solid rgba(255,255,255,.1);}
+.crud-table td{padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top;}
+.crud-table tr:last-child td{border-bottom:none;}
 </style>
 </head>
 <body>
@@ -68,7 +72,7 @@
   <span class="lbl">Lesson 7 of 9 · Automation continues</span>
   <h2>API Testing with Postman</h2>
   <div class="divider"></div>
-  <p style="font-size:.62em">REST APIs · Swagger / OpenAPI · What to test · Postman · Collections · Test Scripts · PetStore</p>
+  <p style="font-size:.62em">APIs · REST · CRUD · Swagger / OpenAPI · Postman · Collections · PetStore</p>
   <p style="font-size:.5em;color:#555;margin-top:.8em">→ next slide &nbsp;|&nbsp; ESC overview</p>
 </section>
 
@@ -76,38 +80,94 @@
 <section>
   <span class="lbl">Lesson Plan</span>
   <div class="plan">
-    <div class="plan-title">Lesson 7: API Testing with Postman <br> Focus: Testing a real public API manually and with scripts</div>
+    <div class="plan-title">Lesson 7: API Testing with Postman <br> Focus: Understanding APIs and testing them with Postman</div>
     <div class="plan-grid">
       <div class="plan-topics">
-        <p><span>1.</span> APIs in the real world — what they are and where they appear</p>
-        <p><span>2.</span> What to test in an API — the full checklist</p>
-        <p><span>3.</span> Swagger / OpenAPI — reading API documentation</p>
-        <p><span>4.</span> Postman — sending requests, inspecting responses</p>
-        <p><span>5.</span> Postman test scripts — automating assertions on API responses</p>
+        <p><span>1.</span> What is an API — definition, purpose, real-world examples</p>
+        <p><span>2.</span> API types — REST, SOAP, GraphQL, Webhooks, gRPC with examples</p>
+        <p><span>3.</span> CRUD &amp; HTTP methods — the link between database operations and REST</p>
+        <p><span>4.</span> Swagger / OpenAPI — how to read API documentation</p>
+        <p><span>5.</span> Postman — sending requests, writing test scripts, building collections</p>
       </div>
       <div>
-        <div class="plan-engage"><strong>Teams Engagement:</strong> Live walkthrough — send a GET and POST request to the Swagger PetStore API together in Postman. Add a test script and run the collection.</div>
+        <div class="plan-engage"><strong>Teams Engagement:</strong> Live walkthrough — open the PetStore Swagger docs, then send GET and POST requests together in Postman and write test assertions.</div>
         <div class="plan-hw"><strong>Homework:</strong> <br> API Testing Assignment <br> Swagger PetStore — 5+ endpoints <br> <a href="https://petstore.swagger.io" target="_blank">petstore.swagger.io</a></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- WHAT IS AN API — REAL-WORLD EXAMPLES -->
+<!-- WHAT IS AN API -->
 <section>
-  <span class="lbl">APIs in the Real World</span>
-  <h3>Where APIs Appear Every Day</h3>
-  <p>An <strong>API (Application Programming Interface)</strong> is a contract that lets two systems talk to each other without knowing each other's internal details.</p>
+  <span class="lbl">Introduction</span>
+  <h3>What Is an API?</h3>
+  <p>An <strong>API (Application Programming Interface)</strong> is a contract between two software systems — it defines what requests one system can make, and what responses it will get back.</p>
   <div class="g2" style="margin-top:.5em">
     <div>
-      <div class="card" style="margin-bottom:6px"><strong>Universal logins</strong>"Continue with Google / Facebook" — your app calls their API, never touches the password.</div>
-      <div class="card g" style="margin-bottom:6px"><strong>Travel comparisons</strong>Sites like momondo.com call hundreds of airline APIs at once to find the cheapest flight.</div>
-      <div class="card o"><strong>Maps</strong>Google Maps API powers navigation in thousands of other apps — directions, speed limits, traffic.</div>
+      <div class="card" style="margin-bottom:6px">
+        <strong>The analogy</strong>
+        A restaurant menu is an API. You don't need to know how the kitchen works — you just pick from what's offered, and you get back a defined result.
+      </div>
+      <div class="card g">
+        <strong>Why APIs exist</strong>
+        <ul>
+          <li>Let systems talk without exposing internals</li>
+          <li>Reuse functionality across many clients</li>
+          <li>Enable third parties to build on your platform</li>
+          <li>Separate frontend from backend</li>
+        </ul>
+      </div>
     </div>
     <div>
-      <div class="card p" style="margin-bottom:6px"><strong>Payment gateways</strong>Stripe, PayPal — your shop calls their API. You never store a card number.</div>
-      <div class="card r" style="margin-bottom:6px"><strong>IoT devices</strong>Smart home devices expose APIs so apps can read sensors and send commands.</div>
-      <div class="card" style="font-size:.60em"><strong>Why this matters for testers:</strong> Every integration point is a place where things can break. API tests catch those breaks before users do.</div>
+      <div class="card o" style="margin-bottom:6px">
+        <strong>Client → API → Server</strong>
+        <ul>
+          <li>Client sends a <strong>request</strong> (what it wants)</li>
+          <li>API routes the request to the right logic</li>
+          <li>Server processes it and returns a <strong>response</strong></li>
+          <li>Client doesn't care how the server works internally</li>
+        </ul>
+      </div>
+      <div class="card r">
+        <strong>What crosses the wire</strong>
+        URL + HTTP method + optional headers + optional body (JSON) → response with status code + body
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW APIS ARE USED -->
+<section>
+  <span class="lbl">API Usage</span>
+  <h3>How APIs Are Used</h3>
+  <div class="g3" style="margin-top:.4em">
+    <div class="card" style="margin-bottom:6px">
+      <strong>Integration</strong>
+      Connect different systems and services. A web shop integrates with a payment provider via API — no direct database access, just a defined contract.
+      <br><br>
+      <em style="color:#aaa;font-size:.9em">Examples: Stripe, PayPal, SendGrid</em>
+    </div>
+    <div class="card g" style="margin-bottom:6px">
+      <strong>Access to data</strong>
+      Companies expose APIs so developers can build on their data without getting direct database access.
+      <br><br>
+      <em style="color:#aaa;font-size:.9em">Examples: Twitter/X API, OpenWeather, Google Maps</em>
+    </div>
+    <div class="card o" style="margin-bottom:6px">
+      <strong>Automation</strong>
+      Software components interact and perform tasks without human intervention — CI/CD, monitoring, scheduled jobs.
+      <br><br>
+      <em style="color:#aaa;font-size:.9em">Examples: GitHub Actions, Slack bots, Zapier</em>
+    </div>
+  </div>
+  <div class="g2" style="margin-top:.4em">
+    <div class="card p">
+      <strong>Universal logins</strong>
+      "Continue with Google / Facebook" — your app calls their OAuth API. You never see the user's password.
+    </div>
+    <div class="card r">
+      <strong>IoT devices</strong>
+      Smart home devices expose APIs so mobile apps and cloud services can read sensor data and send commands without knowing the hardware.
     </div>
   </div>
 </section>
@@ -116,80 +176,131 @@
 <section>
   <span class="lbl">API Types</span>
   <h3>API Architecture Styles</h3>
-  <div class="g3" style="margin-top:.4em">
-    <div class="card" style="margin-bottom:6px">
-      <strong>REST</strong>
-      Uses HTTP methods (GET/POST/PUT/DELETE). Stateless. Returns JSON or XML. Most common today.
+  <div class="g2" style="margin-top:.3em">
+    <div>
+      <div class="card" style="margin-bottom:6px">
+        <strong>REST (Representational State Transfer)</strong>
+        Uses HTTP methods on resource URLs. Stateless. Returns JSON or XML. The dominant style for web and mobile APIs today.
+        <br><em style="color:#aaa;font-size:.9em">Used by: Twitter, Stripe, GitHub, PetStore</em>
+      </div>
+      <div class="card g" style="margin-bottom:6px">
+        <strong>SOAP (Simple Object Access Protocol)</strong>
+        XML-based, strict standards and contracts (WSDL). Verbose but reliable. Common in banking, insurance, and enterprise legacy systems.
+        <br><em style="color:#aaa;font-size:.9em">Used by: PayPal (old), many bank integrations, SAP</em>
+      </div>
+      <div class="card o">
+        <strong>GraphQL</strong>
+        One endpoint, client asks for exactly the fields it needs. No over- or under-fetching. Defined by a schema.
+        <br><em style="color:#aaa;font-size:.9em">Used by: GitHub, Shopify, Facebook, Airbnb</em>
+      </div>
     </div>
-    <div class="card g" style="margin-bottom:6px">
-      <strong>SOAP</strong>
-      XML-based protocol with strict standards. Common in enterprise / banking / legacy systems.
-    </div>
-    <div class="card o" style="margin-bottom:6px">
-      <strong>GraphQL</strong>
-      Client asks for exactly the data it needs. One endpoint, flexible queries. Used by GitHub, Shopify.
-    </div>
-    <div class="card p" style="margin-bottom:6px">
-      <strong>Webhooks</strong>
-      Server calls <em>you</em> when something happens (push, not pull). E.g. GitHub notifying CI on push.
-    </div>
-    <div class="card r" style="margin-bottom:6px">
-      <strong>gRPC</strong>
-      Binary protocol, very fast. Used between microservices internally. Not human-readable.
-    </div>
-    <div class="card" style="margin-bottom:6px;font-size:.60em">
-      <strong>In this course:</strong>
-      We focus on <strong>REST</strong> — it is the dominant style for web APIs, the easiest to test manually, and the one most tools are built around.
+    <div>
+      <div class="card p" style="margin-bottom:6px">
+        <strong>Webhooks</strong>
+        The server calls <em>you</em> when something happens — push, not pull. You register a URL; the provider sends a POST when an event fires.
+        <br><em style="color:#aaa;font-size:.9em">Used by: GitHub (push events), Stripe (payment events), Twilio (SMS delivery)</em>
+      </div>
+      <div class="card r" style="margin-bottom:6px">
+        <strong>gRPC (Google Remote Procedure Call)</strong>
+        Binary protocol over HTTP/2. Extremely fast and efficient. Uses Protocol Buffers (not JSON). Not human-readable.
+        <br><em style="color:#aaa;font-size:.9em">Used by: Google internal services, Netflix, microservice communication</em>
+      </div>
+      <div class="card" style="font-size:.60em">
+        <strong>In this course → REST</strong>
+        Most common, best tooling support, easiest to test manually. Everything we do in Postman is REST.
+      </div>
     </div>
   </div>
 </section>
 
-<!-- REST ANATOMY -->
+<!-- CRUD & HTTP METHODS -->
 <section>
-  <span class="lbl">REST APIs</span>
-  <h3>Anatomy of a REST Request &amp; Response</h3>
-  <div class="g2">
-    <div>
-      <pre><code class="http"># Request
-GET /pet/1 HTTP/1.1
-Host: petstore.swagger.io
-Accept: application/json
-Authorization: Bearer &lt;token&gt;
-
-# Request with body (POST)
-POST /pet HTTP/1.1
-Content-Type: application/json
-
-{
-  "id": 0,
-  "name": "Rex",
-  "status": "available"
-}</code></pre>
+  <span class="lbl">REST &amp; Databases</span>
+  <h3>CRUD Operations &amp; HTTP Methods</h3>
+  <p>REST maps directly onto the four basic database operations. Every REST endpoint is essentially one of these four things.</p>
+  <table class="crud-table" style="margin-top:.5em">
+    <tr>
+      <th style="color:var(--blue)">CRUD</th>
+      <th style="color:var(--blue)">HTTP Method</th>
+      <th style="color:var(--blue)">Database operation</th>
+      <th style="color:var(--blue)">PetStore example</th>
+      <th style="color:var(--blue)">Typical status</th>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--orange)">Create</strong></td>
+      <td><span class="method post">POST</span></td>
+      <td><code>INSERT INTO ...</code></td>
+      <td><code>POST /pet</code></td>
+      <td><code>200 / 201</code></td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--green)">Read</strong></td>
+      <td><span class="method get">GET</span></td>
+      <td><code>SELECT * FROM ...</code></td>
+      <td><code>GET /pet/{id}</code></td>
+      <td><code>200 / 404</code></td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--blue)">Update</strong></td>
+      <td><span class="method put">PUT</span> <span class="method patch">PATCH</span></td>
+      <td><code>UPDATE ... SET ...</code></td>
+      <td><code>PUT /pet</code></td>
+      <td><code>200 / 404</code></td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--red)">Delete</strong></td>
+      <td><span class="method del">DELETE</span></td>
+      <td><code>DELETE FROM ...</code></td>
+      <td><code>DELETE /pet/{id}</code></td>
+      <td><code>200 / 404</code></td>
+    </tr>
+  </table>
+  <div class="g2" style="margin-top:.4em">
+    <div class="card" style="font-size:.60em">
+      <strong>PUT vs PATCH</strong>
+      PUT replaces the entire resource (send all fields). PATCH updates only the fields you send (partial update).
     </div>
-    <div>
-      <pre><code class="http"># Success response
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "id": 1,
-  "name": "Rex",
-  "status": "available"
-}
-
-# Error response
-HTTP/1.1 404 Not Found
-Content-Type: application/json
-
-{ "message": "Pet not found" }</code></pre>
+    <div class="card o" style="font-size:.60em">
+      <strong>GET is safe &amp; idempotent</strong>
+      It never changes data. Calling it 100 times has the same result as calling it once — important for test design.
     </div>
   </div>
-  <div class="g4" style="margin-top:.5em">
-    <div class="card" style="font-size:.58em"><span class="method get">GET</span>Read — no body, safe</div>
-    <div class="card o" style="font-size:.58em"><span class="method post">POST</span>Create — body required</div>
-    <div class="card" style="font-size:.58em"><span class="method put">PUT</span>Replace — full body</div>
-    <div class="card r" style="font-size:.58em"><span class="method del">DEL</span>Delete — by ID</div>
+</section>
+
+<!-- HTTP STATUS CODES -->
+<section>
+  <span class="lbl">HTTP Status Codes</span>
+  <h3>Reading the Response Code</h3>
+  <p>The status code is the first thing to assert in any API test — it tells you whether the server understood and processed the request.</p>
+  <div class="g3" style="margin-top:.4em">
+    <div class="card g">
+      <strong>2xx — Success</strong>
+      <ul>
+        <li><code>200</code> OK — request succeeded</li>
+        <li><code>201</code> Created — resource created</li>
+        <li><code>204</code> No Content — success, no body</li>
+      </ul>
+    </div>
+    <div class="card o">
+      <strong>4xx — Client Error</strong>
+      <ul>
+        <li><code>400</code> Bad Request — invalid input</li>
+        <li><code>401</code> Unauthorised — no/invalid token</li>
+        <li><code>403</code> Forbidden — authenticated but no permission</li>
+        <li><code>404</code> Not Found — resource doesn't exist</li>
+        <li><code>422</code> Unprocessable — validation failed</li>
+      </ul>
+    </div>
+    <div class="card r">
+      <strong>5xx — Server Error</strong>
+      <ul>
+        <li><code>500</code> Internal Server Error — something crashed</li>
+        <li><code>502</code> Bad Gateway — upstream failed</li>
+        <li><code>503</code> Service Unavailable — server overloaded</li>
+      </ul>
+    </div>
   </div>
+  <blockquote style="margin-top:.5em">A 500 in response to bad user input is always a bug — the server should validate and return 400, never crash.</blockquote>
 </section>
 
 <!-- WHAT TO TEST IN AN API -->
@@ -201,7 +312,7 @@ Content-Type: application/json
       <div class="card" style="margin-bottom:6px">
         <strong>Functional correctness</strong>
         <ul>
-          <li>Status codes match the scenario (200, 201, 400, 404…)</li>
+          <li>Status codes match the scenario</li>
           <li>Response body has the right structure and field values</li>
           <li>Data sent is correctly saved and returned</li>
         </ul>
@@ -210,8 +321,8 @@ Content-Type: application/json
         <strong>Data validation</strong>
         <ul>
           <li>Required fields — missing field returns 400</li>
-          <li>Data types — string where number expected → error</li>
-          <li>Boundary values — max length strings, zero, negatives</li>
+          <li>Data types — wrong type returns an error</li>
+          <li>Boundary values — zero, negatives, max length</li>
         </ul>
       </div>
     </div>
@@ -234,7 +345,7 @@ Content-Type: application/json
       </div>
     </div>
   </div>
-  <blockquote>A test suite that only tests the happy path misses most real-world bugs. Always test negative and edge cases too.</blockquote>
+  <blockquote>A test suite that only tests the happy path misses most real-world bugs. Always cover negative and edge cases too.</blockquote>
 </section>
 
 <!-- TEST TYPES -->
@@ -246,23 +357,23 @@ Content-Type: application/json
       <strong>Functional Testing</strong>
       Verify the endpoint does what it is supposed to do with valid input.
       <br><br>
-      <em style="color:#aaa;font-size:.9em">Example: POST /pet with valid data → 200, returns the pet with an ID</em>
+      <em style="color:#aaa;font-size:.9em">POST /pet with valid data → 200, returns the pet with an ID</em>
     </div>
     <div class="card r">
       <strong>Negative Testing</strong>
       Send invalid, missing, or wrong input. Verify the API rejects it gracefully.
       <br><br>
-      <em style="color:#aaa;font-size:.9em">Example: GET /pet/{id} with id = "abc" → 400 or 404 with a useful message</em>
+      <em style="color:#aaa;font-size:.9em">GET /pet/{id} with id = "abc" → 400 or 404 with a useful message, not a crash</em>
     </div>
     <div class="card o">
       <strong>Edge Case Testing</strong>
-      Boundary values, unusual combinations, empty strings, very large IDs.
+      Boundary values, unusual combinations, empty strings, very large numbers.
       <br><br>
-      <em style="color:#aaa;font-size:.9em">Example: POST /pet with an empty name "" — does the API accept or reject it?</em>
+      <em style="color:#aaa;font-size:.9em">POST /pet with name = "" — does the API accept or reject an empty name?</em>
     </div>
   </div>
   <div class="card" style="margin-top:.6em;font-size:.62em">
-    <strong>Homework requirement:</strong> Your test suite must include all three types — at least one functional, one negative, and one edge-case test per endpoint you choose to cover.
+    <strong>Homework requirement:</strong> For each of your 5+ endpoints, include at least one test of each type.
   </div>
 </section>
 
@@ -270,68 +381,62 @@ Content-Type: application/json
 <section>
   <span class="lbl">API Documentation</span>
   <h3>Swagger / OpenAPI</h3>
-  <p><strong>OpenAPI</strong> is a standard for describing REST APIs in a machine-readable format (JSON or YAML). <strong>Swagger UI</strong> renders it as an interactive browser page you can test from.</p>
+  <p><strong>OpenAPI</strong> is a standard for describing REST APIs in a machine-readable format (JSON or YAML). <strong>Swagger UI</strong> renders it as an interactive browser page.</p>
   <div class="g2" style="margin-top:.4em">
     <div>
       <div class="card g" style="margin-bottom:6px">
         <strong>What Swagger shows you:</strong>
         <ul>
-          <li>All available endpoints and HTTP methods</li>
-          <li>Required and optional parameters</li>
-          <li>Request body schema with field types</li>
-          <li>Possible response codes and response schemas</li>
-          <li>Try-it-out — send real requests from the browser</li>
+          <li>All available endpoints grouped by resource</li>
+          <li>HTTP method for each endpoint</li>
+          <li>Required and optional parameters (path, query, header)</li>
+          <li>Request body schema with field names and types</li>
+          <li>All possible response codes and response schemas</li>
+          <li><strong>Try it out</strong> — send real requests from the browser</li>
         </ul>
       </div>
     </div>
     <div>
-      <pre><code class="yaml"># OpenAPI spec (simplified)
-paths:
-  /pet/{petId}:
-    get:
-      summary: Find pet by ID
-      parameters:
-        - name: petId
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Successful
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Pet'
-        '404':
-          description: Pet not found</code></pre>
+      <div class="card o" style="margin-bottom:6px">
+        <strong>Swagger as a requirements document</strong>
+        <ul>
+          <li>The spec says what the API <em>should</em> do</li>
+          <li>Your tests verify it <em>actually</em> does it</li>
+          <li>If behaviour doesn't match the spec → that is a bug</li>
+          <li>If the spec is wrong → raise it with the team</li>
+        </ul>
+      </div>
+      <div class="card p" style="font-size:.60em">
+        <strong>Who writes the spec?</strong>
+        Can be generated from code (annotations), or written first as a design contract (spec-first). Many teams publish it publicly so external developers can build integrations.
+      </div>
     </div>
   </div>
-  <blockquote>Swagger is your contract — it tells you what the API should do. Your tests verify it actually does it.</blockquote>
+  <blockquote>Swagger is your contract. Test against it the same way you test against functional requirements.</blockquote>
 </section>
 
 <!-- PETSTORE OVERVIEW -->
 <section>
   <span class="lbl">Swagger PetStore</span>
   <h3>Our Test Target: PetStore API</h3>
-  <p>A public demo API at <strong>petstore.swagger.io</strong> — perfect for practising API testing without needing a backend.</p>
+  <p>A public demo API at <strong>petstore.swagger.io</strong> — a fully functional Swagger UI with real endpoints you can call from Postman or the browser.</p>
   <div class="g2" style="margin-top:.4em">
     <div>
       <div style="font-size:.62em;margin-bottom:.4em;color:var(--blue);font-weight:600">pet endpoints</div>
-      <div class="endpoint-row"><span class="method post">POST</span><span class="path">/pet</span><span class="desc">Add a new pet</span></div>
+      <div class="endpoint-row"><span class="method post">POST</span><span class="path">/pet</span><span class="desc">Add a new pet to the store</span></div>
       <div class="endpoint-row"><span class="method put">PUT</span><span class="path">/pet</span><span class="desc">Update an existing pet</span></div>
       <div class="endpoint-row"><span class="method get">GET</span><span class="path">/pet/{petId}</span><span class="desc">Find pet by ID</span></div>
-      <div class="endpoint-row"><span class="method get">GET</span><span class="path">/pet/findByStatus</span><span class="desc">Find by status (available…)</span></div>
+      <div class="endpoint-row"><span class="method get">GET</span><span class="path">/pet/findByStatus</span><span class="desc">Find pets by status (available / pending / sold)</span></div>
       <div class="endpoint-row"><span class="method del">DEL</span><span class="path">/pet/{petId}</span><span class="desc">Delete a pet</span></div>
     </div>
     <div>
       <div style="font-size:.62em;margin-bottom:.4em;color:var(--orange);font-weight:600">store &amp; user endpoints</div>
-      <div class="endpoint-row"><span class="method get">GET</span><span class="path">/store/inventory</span><span class="desc">Returns pet inventory by status</span></div>
-      <div class="endpoint-row"><span class="method post">POST</span><span class="path">/store/order</span><span class="desc">Place an order</span></div>
+      <div class="endpoint-row"><span class="method get">GET</span><span class="path">/store/inventory</span><span class="desc">Pet counts grouped by status</span></div>
+      <div class="endpoint-row"><span class="method post">POST</span><span class="path">/store/order</span><span class="desc">Place a purchase order for a pet</span></div>
       <div class="endpoint-row"><span class="method get">GET</span><span class="path">/store/order/{orderId}</span><span class="desc">Find order by ID</span></div>
-      <div class="endpoint-row"><span class="method post">POST</span><span class="path">/user</span><span class="desc">Create user</span></div>
-      <div class="endpoint-row"><span class="method get">GET</span><span class="path">/user/{username}</span><span class="desc">Get user by name</span></div>
-      <div class="card o" style="margin-top:.6em;font-size:.60em"><strong>Pick 5+ endpoints for homework.</strong> Mix GET, POST, and DELETE for variety.</div>
+      <div class="endpoint-row"><span class="method post">POST</span><span class="path">/user</span><span class="desc">Create a new user account</span></div>
+      <div class="endpoint-row"><span class="method get">GET</span><span class="path">/user/{username}</span><span class="desc">Get user by username</span></div>
+      <div class="card o" style="margin-top:.6em;font-size:.60em"><strong>Choose 5+ for homework.</strong> Mix GET, POST, and DELETE. At least two different resource groups.</div>
     </div>
   </div>
 </section>
@@ -340,118 +445,71 @@ paths:
 <section>
   <span class="lbl">Postman</span>
   <h3>What Is Postman?</h3>
-  <p>Postman is the most widely-used API testing tool. It lets you build, send, and automate HTTP requests without writing code — and add test scripts when you're ready to go further.</p>
+  <p>The most widely-used API testing tool. Build, send, and automate HTTP requests — no code required to get started.</p>
   <div class="g3" style="margin-top:.5em">
     <div class="card g">
       <strong>Requests</strong>
-      Build any HTTP request — method, URL, headers, body — and send it with one click.
+      Build any HTTP request — choose method, enter URL, set headers and body — then send with one click and inspect the full response.
     </div>
     <div class="card o">
       <strong>Collections</strong>
-      Group related requests into a folder. Run the whole collection with one click or from CI.
+      Group related requests into folders. Run the whole collection in sequence — like a test suite. Share and export as JSON.
     </div>
     <div class="card p">
       <strong>Test Scripts</strong>
-      Write JavaScript assertions that run after every response. Automate your checks.
+      Write JavaScript in the <em>Tests</em> tab. Assertions run automatically after each response — pass/fail reported per request.
     </div>
     <div class="card r">
       <strong>Environments</strong>
-      Store variables (base URL, tokens) per environment — switch between dev / staging / prod.
+      Store variables (base URL, token, IDs) per environment. Switch between dev/staging/prod without editing requests.
     </div>
     <div class="card">
       <strong>Newman</strong>
-      Command-line runner for Postman collections. Run your tests in CI/CD pipelines.
+      CLI runner for collections. Run your Postman tests in a terminal or CI/CD pipeline without opening the GUI.
     </div>
     <div class="card" style="font-size:.60em">
-      <strong>Download:</strong> postman.com/downloads <br><br>
-      Free for individuals. No account required for basic use.
+      <strong>Get started:</strong><br>
+      postman.com/downloads <br>
+      Free for individual use.
     </div>
   </div>
 </section>
 
-<!-- POSTMAN FIRST REQUEST -->
+<!-- POSTMAN — MAKING A REQUEST -->
 <section>
-  <span class="lbl">Postman — First Request</span>
-  <h3>Sending a GET Request</h3>
-  <p>Fetching pet with ID 1 from the PetStore API:</p>
+  <span class="lbl">Postman — Requests</span>
+  <h3>Making a Request in Postman</h3>
+  <p>Every request in Postman has the same structure — method, URL, and optional tabs for headers, body, and tests.</p>
   <div style="margin:.4em 0">
-    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(79,195,247,.25);border-radius:8px;padding:12px 16px;font-size:.58em;text-align:left">
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(79,195,247,.2);border-radius:8px;padding:14px 18px;font-size:.60em;text-align:left">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
         <span class="method get" style="font-size:1.1em">GET</span>
-        <code style="color:var(--blue);font-size:1.1em">https://petstore.swagger.io/v2/pet/1</code>
-        <span style="margin-left:auto;background:rgba(129,199,132,.15);color:var(--green);border:1px solid var(--green);border-radius:4px;padding:2px 10px">Send</span>
+        <code style="color:var(--blue);font-size:1.1em">{{baseUrl}}/pet/{{petId}}</code>
+        <span style="margin-left:auto;background:rgba(129,199,132,.15);color:var(--green);border:1px solid var(--green);border-radius:4px;padding:3px 14px;font-size:1.1em">Send</span>
       </div>
-      <div style="margin-bottom:6px">
-        <span class="pm-tab active">Headers</span>
+      <div style="margin-bottom:8px">
+        <span class="pm-tab active">Params</span>
+        <span class="pm-tab">Headers</span>
         <span class="pm-tab">Authorization</span>
         <span class="pm-tab">Body</span>
         <span class="pm-tab">Pre-request Script</span>
         <span class="pm-tab">Tests</span>
       </div>
-      <div class="pm-panel">
-        Accept: application/json
-      </div>
+      <div class="pm-panel" style="color:#aaa">No params needed — petId is a path variable defined in the URL above</div>
     </div>
   </div>
-  <div class="g2" style="margin-top:.4em">
-    <div>
-      <pre><code class="json">// Response 200 OK
-{
-  "id": 1,
-  "name": "doggie",
-  "status": "available",
-  "photoUrls": [],
-  "tags": []
-}</code></pre>
+  <div class="g3" style="margin-top:.5em">
+    <div class="card g" style="font-size:.60em">
+      <strong>Response panel shows:</strong>
+      Status code · Response time · Body (JSON) · Headers · Size
     </div>
-    <div>
-      <div class="card g" style="font-size:.60em;margin-bottom:6px"><strong>Check in the response panel:</strong><ul><li>Status: <code>200 OK</code></li><li>Body tab — inspect the JSON</li><li>Headers tab — Content-Type</li><li>Time — response speed in ms</li></ul></div>
-    </div>
-  </div>
-</section>
-
-<!-- POSTMAN POST REQUEST -->
-<section>
-  <span class="lbl">Postman — POST Request</span>
-  <h3>Creating a New Pet</h3>
-  <p>POST requests need a JSON body. Set <code>Content-Type: application/json</code> in Headers.</p>
-  <div style="margin:.3em 0">
-    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,183,77,.25);border-radius:8px;padding:12px 16px;font-size:.58em;text-align:left">
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-        <span class="method post" style="font-size:1.1em">POST</span>
-        <code style="color:var(--orange);font-size:1.1em">https://petstore.swagger.io/v2/pet</code>
-        <span style="margin-left:auto;background:rgba(129,199,132,.15);color:var(--green);border:1px solid var(--green);border-radius:4px;padding:2px 10px">Send</span>
-      </div>
-      <div style="margin-bottom:6px">
-        <span class="pm-tab">Headers</span>
-        <span class="pm-tab">Authorization</span>
-        <span class="pm-tab active">Body</span>
-        <span class="pm-tab">Pre-request Script</span>
-        <span class="pm-tab">Tests</span>
-      </div>
-      <div class="pm-panel">
-        <span style="color:var(--orange)">● raw &nbsp; JSON</span><br><br>
-        <code>{<br>
-        &nbsp;&nbsp;"id": 0,<br>
-        &nbsp;&nbsp;"name": "Rex",<br>
-        &nbsp;&nbsp;"status": "available",<br>
-        &nbsp;&nbsp;"photoUrls": []<br>
-        }</code>
-      </div>
-    </div>
-  </div>
-  <div class="g2" style="margin-top:.4em">
     <div class="card o" style="font-size:.60em">
-      <strong>Response 200 OK</strong><br>
-      Returns the created pet with an assigned <code>id</code>. Save that ID — you can use it in the next GET or DELETE request.
+      <strong>For POST/PUT requests:</strong>
+      Switch to Body tab → select <em>raw</em> → choose JSON → paste your JSON object
     </div>
-    <div class="card r" style="font-size:.60em">
-      <strong>Common mistakes:</strong>
-      <ul>
-        <li>Forgetting <code>Content-Type: application/json</code> header</li>
-        <li>Sending malformed JSON (trailing comma, missing quotes)</li>
-        <li>Using Body → form-data instead of raw JSON</li>
-      </ul>
+    <div class="card p" style="font-size:.60em">
+      <strong>Environment variables:</strong>
+      Use <code>{{baseUrl}}</code> and <code>{{petId}}</code> instead of hard-coded values — set once, reuse everywhere
     </div>
   </div>
 </section>
@@ -459,72 +517,73 @@ paths:
 <!-- POSTMAN TEST SCRIPTS -->
 <section>
   <span class="lbl">Postman — Test Scripts</span>
-  <h3>Automating Assertions</h3>
-  <p>The <strong>Tests</strong> tab runs JavaScript after the response arrives. Use <code>pm.test()</code> to write assertions.</p>
-  <pre><code class="javascript">// Tests tab — runs after every response
-
-// 1. Check status code
-pm.test("Status code is 200", function () {
-    pm.response.to.have.status(200);
-});
-
-// 2. Response time
-pm.test("Response time under 2000ms", function () {
-    pm.expect(pm.response.responseTime).to.be.below(2000);
-});
-
-// 3. Response body structure
-pm.test("Response has id and name", function () {
-    const body = pm.response.json();
-    pm.expect(body).to.have.property("id");
-    pm.expect(body).to.have.property("name");
-});
-
-// 4. Field value
-pm.test("Pet status is available", function () {
-    const body = pm.response.json();
-    pm.expect(body.status).to.eql("available");
-});
-
-// 5. Save to environment for next request
-pm.environment.set("petId", pm.response.json().id);</code></pre>
+  <h3>Writing Assertions in the Tests Tab</h3>
+  <p>The <strong>Tests</strong> tab runs JavaScript after each response. Results appear as pass/fail in the test results panel.</p>
+  <div style="margin:.4em 0">
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(79,195,247,.2);border-radius:8px;padding:14px 18px;font-size:.60em;text-align:left">
+      <div style="margin-bottom:8px">
+        <span class="pm-tab">Params</span>
+        <span class="pm-tab">Headers</span>
+        <span class="pm-tab">Body</span>
+        <span class="pm-tab active">Tests</span>
+      </div>
+      <div class="pm-panel">
+        <div style="color:#888;margin-bottom:.4em">// Four common assertions — shown live during class</div>
+        <div style="color:#ccc">1. Check status code</div>
+        <div style="color:#ccc">2. Check response time</div>
+        <div style="color:#ccc">3. Check that a field exists in the body</div>
+        <div style="color:#ccc">4. Check a specific field value</div>
+        <div style="color:#888;margin-top:.4em">// Save a value to use in the next request</div>
+        <div style="color:#ccc">5. Store the returned ID in an environment variable</div>
+      </div>
+    </div>
+  </div>
+  <div class="g2" style="margin-top:.4em">
+    <div class="card g" style="font-size:.60em">
+      <strong>pm.test(name, fn)</strong>
+      Wraps one assertion. If it throws, the test fails. The name appears in the results panel — make it descriptive.
+    </div>
+    <div class="card o" style="font-size:.60em">
+      <strong>pm.expect() vs pm.response.to.have</strong>
+      Both work — <code>pm.expect()</code> is Chai-style and more flexible. <code>pm.response.to.have.status(200)</code> is a shorthand for the most common check.
+    </div>
+  </div>
 </section>
 
-<!-- POSTMAN TEST SCRIPTS — NEGATIVE -->
+<!-- POSTMAN NEGATIVE TESTS -->
 <section>
   <span class="lbl">Postman — Negative Tests</span>
   <h3>Testing Error Responses</h3>
-  <p>Negative tests verify the API rejects bad input correctly — not just that the happy path works.</p>
-  <div class="g2">
+  <p>Create separate requests for failure scenarios — give them clear names so the collection reads like a test plan.</p>
+  <div class="g2" style="margin-top:.4em">
     <div>
-      <pre><code class="javascript">// GET /pet/99999999 — non-existent ID
-
-pm.test("Returns 404 for unknown pet", function () {
-    pm.response.to.have.status(404);
-});
-
-pm.test("Error message is present", function () {
-    const body = pm.response.json();
-    pm.expect(body).to.have.property("message");
-});</code></pre>
-      <pre><code class="javascript">// GET /pet/abc — invalid (non-numeric) ID
-
-pm.test("Returns 400 or 404 for invalid ID", function () {
-    pm.expect(pm.response.code).to.be.oneOf([400, 404]);
-});</code></pre>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(229,115,115,.25);border-radius:8px;padding:12px 16px;font-size:.60em;text-align:left;margin-bottom:8px">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+          <span class="method get" style="font-size:1em">GET</span>
+          <code style="color:var(--red)">{{baseUrl}}/pet/99999999</code>
+        </div>
+        <div style="color:#aaa">Test: status is 404 · message field exists</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(229,115,115,.25);border-radius:8px;padding:12px 16px;font-size:.60em;text-align:left">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+          <span class="method get" style="font-size:1em">GET</span>
+          <code style="color:var(--red)">{{baseUrl}}/pet/abc</code>
+        </div>
+        <div style="color:#aaa">Test: status is 4xx · server did not return 500</div>
+      </div>
     </div>
     <div>
       <div class="card r" style="margin-bottom:6px">
         <strong>What to assert in error responses:</strong>
         <ul>
-          <li>Status code is not 200</li>
-          <li>Error message field exists</li>
-          <li>No sensitive data in the error body</li>
-          <li>Server does not return 500 for client mistakes</li>
+          <li>Status code is the expected error code (not 200)</li>
+          <li>Error message field exists and is readable</li>
+          <li>No sensitive data (stack traces, DB errors) in the body</li>
+          <li>Server returns a 4xx for client mistakes — never 5xx</li>
         </ul>
       </div>
       <div class="card o" style="font-size:.60em">
-        <strong>Tip — use environment variables:</strong> Set <code>{{baseUrl}}</code> = <code>https://petstore.swagger.io/v2</code> in your environment so your requests look like <code>{{baseUrl}}/pet/{{petId}}</code> instead of hard-coded URLs.
+        <strong>Tip — chain requests:</strong> POST a pet, save its ID, then DELETE it, then GET it to confirm 404. This tests the full lifecycle in one collection run.
       </div>
     </div>
   </div>
@@ -534,25 +593,25 @@ pm.test("Returns 400 or 404 for invalid ID", function () {
 <section>
   <span class="lbl">Postman — Collections</span>
   <h3>Organising Tests into a Collection</h3>
-  <p>A <strong>Collection</strong> groups related requests and lets you run them all in sequence — like a test suite for your API.</p>
+  <p>A <strong>Collection</strong> groups requests into folders and runs them in order — each with its own test assertions.</p>
   <div class="g2" style="margin-top:.4em">
     <div>
       <div style="background:rgba(255,255,255,.04);border:1px solid rgba(79,195,247,.2);border-radius:8px;padding:12px;font-size:.58em">
         <div style="color:var(--orange);font-weight:600;margin-bottom:.5em">📁 PetStore Tests</div>
         <div style="padding-left:1em">
-          <div style="color:var(--blue);margin-bottom:.3em">📁 Pet Endpoints</div>
+          <div style="color:var(--blue);margin-bottom:.3em">📁 Happy Path</div>
           <div style="padding-left:1em;color:#ccc;line-height:2">
-            <div><span class="method post" style="font-size:.85em">POST</span> Create pet (Rex)</div>
-            <div><span class="method get" style="font-size:.85em">GET</span> Get pet by ID</div>
+            <div><span class="method post" style="font-size:.85em">POST</span> Create pet → save ID</div>
+            <div><span class="method get" style="font-size:.85em">GET</span> Get pet by ID → verify name</div>
             <div><span class="method put" style="font-size:.85em">PUT</span> Update pet name</div>
-            <div><span class="method get" style="font-size:.85em">GET</span> Verify update</div>
+            <div><span class="method get" style="font-size:.85em">GET</span> Verify update persisted</div>
             <div><span class="method del" style="font-size:.85em">DEL</span> Delete pet</div>
-            <div><span class="method get" style="font-size:.85em">GET</span> Verify 404 after delete</div>
+            <div><span class="method get" style="font-size:.85em">GET</span> Confirm 404 after delete</div>
           </div>
           <div style="color:var(--red);margin-top:.4em;margin-bottom:.3em">📁 Negative Tests</div>
           <div style="padding-left:1em;color:#ccc;line-height:2">
             <div><span class="method get" style="font-size:.85em">GET</span> Non-existent ID → 404</div>
-            <div><span class="method get" style="font-size:.85em">GET</span> Invalid ID (abc) → 4xx</div>
+            <div><span class="method get" style="font-size:.85em">GET</span> Invalid ID format → 4xx</div>
           </div>
         </div>
       </div>
@@ -561,18 +620,20 @@ pm.test("Returns 400 or 404 for invalid ID", function () {
       <div class="card g" style="margin-bottom:6px">
         <strong>Running a Collection:</strong>
         <ul>
-          <li>Click <strong>Run collection</strong> → opens Collection Runner</li>
-          <li>Choose environment, number of iterations</li>
-          <li>Results show pass/fail per test per request</li>
-          <li>Export results as JSON or HTML report</li>
+          <li>Click <strong>Run collection</strong> → Collection Runner opens</li>
+          <li>Select environment, set iteration count</li>
+          <li>Results: pass/fail per test per request</li>
+          <li>Export as JSON or HTML report</li>
         </ul>
       </div>
       <div class="card" style="font-size:.60em">
-        <strong>Newman (CLI runner):</strong>
-        <pre style="font-size:.9em;margin-top:.4em">npm install -g newman
-newman run PetStore.postman_collection.json \
-  -e PetStore.environment.json</pre>
-        Runs your Postman collection in CI/CD — no GUI needed.
+        <strong>Newman — run in terminal:</strong>
+        <br><br>
+        Install: <code>npm install -g newman</code>
+        <br>
+        Run: <code>newman run collection.json -e env.json</code>
+        <br><br>
+        No GUI needed — plug into CI/CD pipelines.
       </div>
     </div>
   </div>
@@ -583,16 +644,16 @@ newman run PetStore.postman_collection.json \
   <span class="lbl">Teams Activity</span>
   <div class="teams">
     <h3>🐾 Live: PetStore in Postman</h3>
-    <p>Open Postman and follow along. We'll build a small collection together.</p>
+    <p>Open Postman and follow along.</p>
     <ol style="font-size:.68em;margin-top:.5em">
-      <li>Open <strong>petstore.swagger.io</strong> — browse the <code>/pet</code> endpoints in Swagger UI</li>
-      <li><strong>POST /pet</strong> — create a new pet with your own name and status <code>"available"</code></li>
-      <li><strong>GET /pet/{id}</strong> — copy the returned <code>id</code> and fetch your pet back</li>
-      <li>Add a <strong>Tests</strong> script: check status 200 and that <code>name</code> matches what you sent</li>
-      <li><strong>GET /pet/99999999</strong> — what status code do you get? Add a test asserting it is not 200</li>
-      <li>Save both requests into a <strong>Collection</strong> and run it</li>
+      <li>Go to <strong>petstore.swagger.io</strong> — find the <code>POST /pet</code> endpoint and read the required fields</li>
+      <li>In Postman: <strong>POST /pet</strong> — create a pet with your own name, status <code>"available"</code></li>
+      <li><strong>GET /pet/{id}</strong> — use the ID from the response to fetch your pet back</li>
+      <li>Add to the <strong>Tests</strong> tab: check status 200 and that the name matches what you sent</li>
+      <li><strong>GET /pet/99999999</strong> — add a test asserting the status is NOT 200</li>
+      <li>Save all three requests into a <strong>Collection</strong> and run it</li>
     </ol>
-    <p class="tip">Share your test results (pass/fail count) in Teams chat.</p>
+    <p class="tip">Post your pass/fail count in Teams chat.</p>
   </div>
 </section>
 
@@ -605,12 +666,12 @@ newman run PetStore.postman_collection.json \
       <div>
         <p style="font-size:.65em"><strong>The Task:</strong></p>
         <ul style="font-size:.65em">
-          <li>Open <a href="https://petstore.swagger.io" target="_blank">petstore.swagger.io</a> and read the API docs</li>
-          <li>Choose <strong>at least 5 endpoints</strong> to test (mix GET, POST, PUT, DELETE)</li>
-          <li>For each endpoint write:
+          <li>Read the docs at <a href="https://petstore.swagger.io" target="_blank">petstore.swagger.io</a></li>
+          <li>Choose <strong>at least 5 endpoints</strong> — mix GET, POST, PUT, DELETE and at least two resource groups (pet + store or pet + user)</li>
+          <li>For each endpoint include:
             <ul>
               <li>At least one <strong>functional</strong> test (happy path)</li>
-              <li>At least one <strong>negative</strong> test (bad input or missing data)</li>
+              <li>At least one <strong>negative</strong> test (bad/missing input)</li>
               <li>At least one <strong>edge case</strong> (boundary value, empty field, huge ID)</li>
             </ul>
           </li>
@@ -626,10 +687,10 @@ newman run PetStore.postman_collection.json \
         <p style="font-size:.65em;margin-top:.4em"><strong>Submit via GitHub:</strong></p>
         <ul style="font-size:.65em">
           <li>Test scripts or exported Postman collection</li>
-          <li>A brief report: which endpoints you tested, what you found</li>
-          <li>Include test run output (screenshot or Newman report)</li>
+          <li>A short report: endpoints tested, observations, any spec mismatches found</li>
+          <li>Include test run output — screenshot or Newman report</li>
         </ul>
-        <blockquote style="margin-top:.4em">Use the Swagger docs as your requirements spec — if the API doesn't match the spec, that is a bug worth reporting.</blockquote>
+        <blockquote style="margin-top:.4em">If the API's behaviour doesn't match the Swagger spec — that is a bug worth documenting.</blockquote>
       </div>
     </div>
   </div>
