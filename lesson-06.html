@@ -97,6 +97,35 @@
   </div>
 </section>
 
+<!-- TESTING PYRAMID -->
+<section>
+  <span class="lbl">The Testing Pyramid</span>
+  <h3>Where API Tests Fit</h3>
+  <p>Unit tests cover individual functions. API tests cover the layer above — how components work together over HTTP.</p>
+  <div class="g2" style="margin-top:.6em;align-items:center">
+    <div class="pyramid">
+      <div class="pyr-layer" style="width:220px;padding:10px;background:rgba(229,115,115,.25);border:1px solid var(--red)">E2E / UI Tests</div>
+      <div class="pyr-layer active" style="width:320px;padding:10px;background:rgba(255,183,77,.35);border:2px solid var(--orange)">Integration / API Tests ← we are here</div>
+      <div class="pyr-layer" style="width:420px;padding:12px;background:rgba(129,199,132,.2);border:1px solid var(--green)">Unit Tests</div>
+    </div>
+    <div>
+      <div class="card o" style="margin-bottom:8px">
+        <strong>Integration tests verify:</strong>
+        <ul>
+          <li>Components work correctly together</li>
+          <li>HTTP routing and status codes are right</li>
+          <li>Request parsing and response format</li>
+          <li>Validation logic is correctly wired into the API</li>
+        </ul>
+      </div>
+      <div class="card r" style="font-size:.60em">
+        <strong>Trade-off vs unit tests:</strong>
+        Slower to run, harder to isolate failures — but catch problems that unit tests miss: wiring, middleware, routing.
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- WHAT IS AN API -->
 <section>
   <span class="lbl">Introduction</span>
@@ -134,47 +163,6 @@
           <li>momondo.com — calls hundreds of airline APIs at once</li>
           <li>Google Maps — navigation in thousands of third-party apps</li>
         </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- API ARCHITECTURE TYPES -->
-<section>
-  <span class="lbl">API Types</span>
-  <h3>API Architecture Styles</h3>
-  <div class="g2" style="margin-top:.3em">
-    <div>
-      <div class="card" style="margin-bottom:6px">
-        <strong>REST (Representational State Transfer)</strong>
-        Uses HTTP methods on resource URLs. Stateless. Returns JSON or XML. The dominant style for web and mobile APIs today.
-        <br><em style="color:#aaa;font-size:.9em">Used by: Twitter, Stripe, GitHub, User-Register</em>
-      </div>
-      <div class="card g" style="margin-bottom:6px">
-        <strong>SOAP (Simple Object Access Protocol)</strong>
-        XML-based, strict standards and contracts. Verbose but reliable. Common in banking, insurance, and enterprise legacy systems.
-        <br><em style="color:#aaa;font-size:.9em">Used by: PayPal (legacy), many bank integrations, SAP</em>
-      </div>
-      <div class="card o">
-        <strong>GraphQL</strong>
-        One endpoint — client asks for exactly the fields it needs. No over- or under-fetching.
-        <br><em style="color:#aaa;font-size:.9em">Used by: GitHub, Shopify, Facebook, Airbnb</em>
-      </div>
-    </div>
-    <div>
-      <div class="card p" style="margin-bottom:6px">
-        <strong>Webhooks</strong>
-        The server calls <em>you</em> when something happens. You register a URL; the provider sends a POST when an event fires — push, not pull.
-        <br><em style="color:#aaa;font-size:.9em">Used by: GitHub (push events), Stripe (payments), Twilio (SMS)</em>
-      </div>
-      <div class="card r" style="margin-bottom:6px">
-        <strong>gRPC (Google Remote Procedure Call)</strong>
-        Binary protocol over HTTP/2. Very fast. Uses Protocol Buffers (not JSON). Not human-readable.
-        <br><em style="color:#aaa;font-size:.9em">Used by: Google, Netflix, internal microservices</em>
-      </div>
-      <div class="card" style="font-size:.60em">
-        <strong>In this course → REST</strong>
-        Most common, best tooling, easiest to test. Everything we cover uses REST.
       </div>
     </div>
   </div>
@@ -268,35 +256,6 @@
     </div>
   </div>
   <blockquote style="margin-top:.5em">A 500 in response to bad user input is always a bug — the server should validate and return 400, never crash.</blockquote>
-</section>
-
-<!-- TESTING PYRAMID -->
-<section>
-  <span class="lbl">The Testing Pyramid</span>
-  <h3>Where API Tests Fit</h3>
-  <p>Unit tests cover individual functions. API tests cover the layer above — how components work together over HTTP.</p>
-  <div class="g2" style="margin-top:.6em;align-items:center">
-    <div class="pyramid">
-      <div class="pyr-layer" style="width:220px;padding:10px;background:rgba(229,115,115,.25);border:1px solid var(--red)">E2E / UI Tests</div>
-      <div class="pyr-layer active" style="width:320px;padding:10px;background:rgba(255,183,77,.35);border:2px solid var(--orange)">Integration / API Tests ← we are here</div>
-      <div class="pyr-layer" style="width:420px;padding:12px;background:rgba(129,199,132,.2);border:1px solid var(--green)">Unit Tests</div>
-    </div>
-    <div>
-      <div class="card o" style="margin-bottom:8px">
-        <strong>Integration tests verify:</strong>
-        <ul>
-          <li>Components work correctly together</li>
-          <li>HTTP routing and status codes are right</li>
-          <li>Request parsing and response format</li>
-          <li>Validation logic is correctly wired into the API</li>
-        </ul>
-      </div>
-      <div class="card r" style="font-size:.60em">
-        <strong>Trade-off vs unit tests:</strong>
-        Slower to run, harder to isolate failures — but catch problems that unit tests miss: wiring, middleware, routing.
-      </div>
-    </div>
-  </div>
 </section>
 
 <!-- USER-REGISTER ARCHITECTURE -->

@@ -116,30 +116,39 @@
 <section>
   <span class="lbl">API Types</span>
   <h3>API Architecture Styles</h3>
-  <div class="g3" style="margin-top:.4em">
-    <div class="card" style="margin-bottom:6px">
-      <strong>REST</strong>
-      Uses HTTP methods (GET/POST/PUT/DELETE). Stateless. Returns JSON or XML. Most common today.
+  <div class="g2" style="margin-top:.3em">
+    <div>
+      <div class="card" style="margin-bottom:6px">
+        <strong>REST (Representational State Transfer)</strong>
+        Uses HTTP methods on resource URLs. Stateless. Returns JSON or XML. The dominant style for web and mobile APIs today.
+        <br><em style="color:#aaa;font-size:.9em">Used by: Twitter, Stripe, GitHub, PetStore</em>
+      </div>
+      <div class="card g" style="margin-bottom:6px">
+        <strong>SOAP (Simple Object Access Protocol)</strong>
+        XML-based, strict standards and contracts. Verbose but reliable. Common in banking, insurance, and enterprise legacy systems.
+        <br><em style="color:#aaa;font-size:.9em">Used by: PayPal (legacy), many bank integrations, SAP</em>
+      </div>
+      <div class="card o">
+        <strong>GraphQL</strong>
+        One endpoint — client asks for exactly the fields it needs. No over- or under-fetching.
+        <br><em style="color:#aaa;font-size:.9em">Used by: GitHub, Shopify, Facebook, Airbnb</em>
+      </div>
     </div>
-    <div class="card g" style="margin-bottom:6px">
-      <strong>SOAP</strong>
-      XML-based protocol with strict standards. Common in enterprise / banking / legacy systems.
-    </div>
-    <div class="card o" style="margin-bottom:6px">
-      <strong>GraphQL</strong>
-      Client asks for exactly the data it needs. One endpoint, flexible queries. Used by GitHub, Shopify.
-    </div>
-    <div class="card p" style="margin-bottom:6px">
-      <strong>Webhooks</strong>
-      Server calls <em>you</em> when something happens (push, not pull). E.g. GitHub notifying CI on push.
-    </div>
-    <div class="card r" style="margin-bottom:6px">
-      <strong>gRPC</strong>
-      Binary protocol, very fast. Used between microservices internally. Not human-readable.
-    </div>
-    <div class="card" style="margin-bottom:6px;font-size:.60em">
-      <strong>In this course:</strong>
-      We focus on <strong>REST</strong> — it is the dominant style for web APIs, the easiest to test manually, and the one most tools are built around.
+    <div>
+      <div class="card p" style="margin-bottom:6px">
+        <strong>Webhooks</strong>
+        The server calls <em>you</em> when something happens. You register a URL; the provider sends a POST when an event fires — push, not pull.
+        <br><em style="color:#aaa;font-size:.9em">Used by: GitHub (push events), Stripe (payments), Twilio (SMS)</em>
+      </div>
+      <div class="card r" style="margin-bottom:6px">
+        <strong>gRPC (Google Remote Procedure Call)</strong>
+        Binary protocol over HTTP/2. Very fast. Uses Protocol Buffers (not JSON). Not human-readable.
+        <br><em style="color:#aaa;font-size:.9em">Used by: Google, Netflix, internal microservices</em>
+      </div>
+      <div class="card" style="font-size:.60em">
+        <strong>In this course → REST</strong>
+        Most common, best tooling, easiest to test manually. Everything we do in Postman is REST.
+      </div>
     </div>
   </div>
 </section>
