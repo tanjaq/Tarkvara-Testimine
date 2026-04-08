@@ -18,7 +18,7 @@ This repository contains:
 ## 📝 Homework Assignments
 
 | Lesson & HW | Description | Where to submit |
-|----|--------|-------------|-----------------|
+|-------------|-------------|-----------------|
 | 1 | Reflection — write 3–5 sentences on what "quality" means to you. Discussed in class, no formal submission. | N/A |
 | 2 | Write functional and non-functional requirements for a chosen project (e.g. cvkeskus.ee job search). | Teams |
 | 3 | Find a real bug on any website and write a full bug report as a GitHub Issue. | [Bug-Reporting](https://github.com/tanjaq/Bug-Reporting) |
