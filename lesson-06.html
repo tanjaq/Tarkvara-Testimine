@@ -90,7 +90,7 @@
         <p><span>5.</span> Mocking — what it is, why we need it, how jest.mock works</p>
       </div>
       <div>
-        <div class="plan-engage"><strong>Teams Engagement:</strong> Run both test files (app.test.js and app.mock.test.js) — compare how long each takes. Discuss: why is one 6× faster?</div>
+        <div class="plan-engage"><strong>Teams Engagement:</strong> Open User-Register, run both test files, compare run times — then discuss why one is 6× faster and what the solution is.</div>
         <div class="plan-hw"><strong>Homework:</strong> <br> User-Register - Ülesanne 1 &amp; 2 <br> <a href="https://github.com/tanjaq/User-Register" target="_blank">GitHub Link</a></div>
       </div>
     </div>
@@ -283,81 +283,6 @@
   </div>
 </section>
 
-<!-- SUPERTEST -->
-<section>
-  <span class="lbl">Integration Testing</span>
-  <h3>Testing HTTP APIs with Supertest</h3>
-  <p><strong>Supertest</strong> lets you send real HTTP requests to your Express app inside a Jest test — no browser, no running server needed.</p>
-  <div class="g2" style="margin-top:.5em">
-    <div>
-      <div class="card g" style="margin-bottom:6px">
-        <strong>What Supertest does:</strong>
-        <ul>
-          <li>Starts your Express app in memory</li>
-          <li>Sends a real HTTP request to it</li>
-          <li>Returns the response for you to assert on</li>
-          <li>Shuts down after the test — no cleanup needed</li>
-        </ul>
-      </div>
-      <div class="card" style="font-size:.60em">
-        <strong>Install:</strong> <code>npm install --save-dev supertest</code>
-      </div>
-    </div>
-    <div>
-      <div class="card o" style="margin-bottom:6px">
-        <strong>What you assert on:</strong>
-        <ul>
-          <li><code>response.statusCode</code> — 200, 400, etc.</li>
-          <li><code>response.body</code> — the JSON returned</li>
-          <li><code>response.headers</code> — Content-Type, etc.</li>
-        </ul>
-      </div>
-      <div class="card p" style="font-size:.62em">
-        <strong>app.test.js — the integration test file</strong>
-        Uses the <strong>real</strong> validators. Creates the app with <code>createApp(validateUsername, validatePassword, validateEmail)</code>, then sends POST requests with <code>request(app).post('/users').send({...})</code> and asserts status codes and body fields.
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- THE PROBLEM -->
-<section>
-  <span class="lbl">The Problem</span>
-  <h3>Why Are These Tests So Slow?</h3>
-  <p><code>validateEmail.js</code> contains an intentional busy-wait of <strong>2 seconds per call</strong> — simulating a real-world call to an external email verification service.</p>
-  <div class="g2" style="margin-top:.5em">
-    <div>
-      <div class="card r" style="margin-bottom:6px">
-        <strong>The impact on tests:</strong>
-        <ul>
-          <li>Every test that calls the real validator waits 2 s</li>
-          <li>3 tests = 6+ seconds minimum</li>
-          <li>A full suite of 30 tests = 1 minute just waiting</li>
-          <li>Developers stop running tests as often</li>
-        </ul>
-      </div>
-      <div class="card o">
-        <strong>In the real world this could be:</strong>
-        <ul>
-          <li>A call to an external email verification API</li>
-          <li>A database lookup</li>
-          <li>A network request to a third-party service</li>
-          <li>A call to a payment gateway</li>
-        </ul>
-      </div>
-    </div>
-    <div>
-      <div class="card p" style="margin-bottom:6px">
-        <strong>What are we actually testing?</strong>
-        In <code>app.test.js</code> we are testing the API routing and validation wiring — not the email validation logic itself. That logic already has its own unit tests in <code>validateEmail.test.js</code>.
-      </div>
-      <div class="card g" style="font-size:.60em">
-        <strong>The solution:</strong> replace the slow real validator with a fast fake that behaves the same way — same inputs, same outputs, but instant. This is called <strong>mocking</strong>.
-      </div>
-    </div>
-  </div>
-  <blockquote>We should not be blocked by a dependency that is not what we are testing.</blockquote>
-</section>
 
 <!-- WHAT IS A MOCK -->
 <section>
